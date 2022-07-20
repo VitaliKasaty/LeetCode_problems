@@ -1,9 +1,11 @@
 package com.leetcode.vitalikasaty.task1220;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 /*
 Difficulty: Hard
@@ -39,11 +41,13 @@ public class Count_Vowels_Permutation {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.countVowelPermutation(100));
+		System.out.println(solution.countVowelPermutation(5));
 	}
 }
 
 class Solution {
+
+	int result = 0;
 
 	Map<String, String[]> combinationBySymbol = new HashMap<>();
 	{
@@ -54,40 +58,39 @@ class Solution {
 		combinationBySymbol.put("i", new String[] { "e", "o", "u", "a" });
 	}
 
-	public int countVowelPermutation(int n) {
+	public int recursion(int n, String symbol) {
 
-		List<String> listResultString = new ArrayList<>();
-		listResultString.add("a");
-		listResultString.add("e");
-		listResultString.add("o");
-		listResultString.add("u");
-		listResultString.add("i");
-
-		for (int i = 1; i < n; i++) {
-
-			int lengthListResultSizeCurrent = listResultString.size();
-			for (int j = 0; j < lengthListResultSizeCurrent; j++) {
-
-				String lastSymbol = listResultString.get(j).substring(listResultString.get(j).length() - 1);
-
-				String[] nextValueBySymbol = combinationBySymbol.get(lastSymbol);
-				for (int z = 0; z < nextValueBySymbol.length; z++) {
-					listResultString.add(listResultString.get(j) + nextValueBySymbol[z]);
-				}
-			}
-
-			for (int p = 0; p < lengthListResultSizeCurrent; p++) {
-				if (listResultString.get(p).length() == i) {
-					listResultString.remove(p);
-					p = -1;
-				}
-			}
+		if (n == 0) {
+			return 0;
 		}
 
-		System.out.println(listResultString);
+		String possibleSymbolsPast[] = combinationBySymbol.get(symbol);
+		if (n == 1) {
+			result += possibleSymbolsPast.length;
+			n--;
+		} else {
+			for (int i = 0; i < possibleSymbolsPast.length; i++) {
+				recursion(n - 1, possibleSymbolsPast[i]);
+			}
+		}
+		return result;
+	}
 
-		return listResultString.size();
+	public int countVowelPermutation(int n) {
 
+		if (n == 1) {
+			return 5;
+		} else {
+			n--;
+		}
+
+		int finalCount = 0;
+		for (Map.Entry<String, String[]> entry : combinationBySymbol.entrySet()) {
+			finalCount += recursion(n, entry.getKey());
+			result = 0;
+		}
+
+		return finalCount;
 	}
 
 }
