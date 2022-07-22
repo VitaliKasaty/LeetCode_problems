@@ -42,7 +42,7 @@ public class Count_Vowels_Permutation {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.countVowelPermutation(144));
+		System.out.println(solution.countVowelPermutation(123456));
 	}
 }
 
@@ -63,8 +63,8 @@ class Solution {
 //			[i][3] = o;
 //			[i][4] = u;	
 			
-			countByLastSymbol[i][0] += (countByLastSymbol[i - 1][1] 
-					+ countByLastSymbol[i - 1][2] + countByLastSymbol[i - 1][4]) % mod;
+			countByLastSymbol[i][0] += (((countByLastSymbol[i - 1][1] 
+					+ countByLastSymbol[i - 1][2]) % mod) + countByLastSymbol[i - 1][4]) % mod;
 			
 			countByLastSymbol[i][1] += (countByLastSymbol[i - 1][0] 
 					+ countByLastSymbol[i - 1][2]) % mod; 
