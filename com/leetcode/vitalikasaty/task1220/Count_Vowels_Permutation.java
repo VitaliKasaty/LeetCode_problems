@@ -42,49 +42,49 @@ public class Count_Vowels_Permutation {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.countVowelPermutation(5));
+		System.out.println(solution.countVowelPermutation(20));
 	}
 }
 
 class Solution {
 
-	int result = 0;
+	int[] result = new int[5];
 
-	public int recursion(int n, Character symbol) {
+	public int[] recursion(int n, Character symbol) {
 
 		if (n == 0) {
-			return 0;
+			return result;
 		}
 
 		if (symbol.equals('a')) {
 			if (n == 1) {
-				result += 1;
+				result[0] += 1;
 			} else {
 				recursion(n - 1, 'e');
 			}
 		} else if (symbol.equals('e')) {
 			if (n == 1) {
-				result += 2;
+				result[1] += 2;
 			} else {
 				recursion(n - 1, 'a');
 				recursion(n - 1, 'i');
 			}
 		} else if (symbol.equals('o')) {
 			if (n == 1) {
-				result += 2;
+				result[2] += 2;
 			} else {
 				recursion(n - 1, 'i');
 				recursion(n - 1, 'u');
 			}
 		} else if (symbol.equals('u')) {
 			if (n == 1) {
-				result += 1;
+				result[3] += 1;
 			} else {
 				recursion(n - 1, 'a');
 			}
 		} else if (symbol.equals('i')) {
 			if (n == 1) {
-				result += 4;
+				result[4] += 4;
 			} else {
 				recursion(n - 1, 'e');
 				recursion(n - 1, 'o');
@@ -104,70 +104,16 @@ class Solution {
 			n--;
 		}
 
-		int finalCount = 0;
+		int finalCount;
+		recursion(n, 'a');
+		recursion(n, 'e');
+		recursion(n, 'o');
+		recursion(n, 'u');
+		recursion(n, 'i');
 
-		finalCount += recursion(n, 'a');
-		result = 0;
-		finalCount += recursion(n, 'e');
-		result = 0;
-		finalCount += recursion(n, 'o');
-		result = 0;
-		finalCount += recursion(n, 'u');
-		result = 0;
-		finalCount += recursion(n, 'i');
-		result = 0;
+		finalCount = result[0] + result[1] + result[2] + result[3] + result[4];
 
 		return finalCount;
 	}
 
 }
-
-//class Solution {
-//
-//	int result = 0;
-//
-//	Map<String, String[]> combinationBySymbol = new HashMap<>();
-//	{
-//		combinationBySymbol.put("a", new String[] { "e" });
-//		combinationBySymbol.put("e", new String[] { "a", "i" });
-//		combinationBySymbol.put("o", new String[] { "i", "u" });
-//		combinationBySymbol.put("u", new String[] { "a" });
-//		combinationBySymbol.put("i", new String[] { "e", "o", "u", "a" });
-//	}
-//
-//	public int recursion(int n, String symbol) {
-//
-//		if (n == 0) {
-//			return 0;
-//		}
-//
-//		String possibleSymbolsPast[] = combinationBySymbol.get(symbol);
-//		if (n == 1) {
-//			result += possibleSymbolsPast.length;
-//			n--;
-//		} else {
-//			for (int i = 0; i < possibleSymbolsPast.length; i++) {
-//				recursion(n - 1, possibleSymbolsPast[i]);
-//			}
-//		}
-//		return result;
-//	}
-//
-//	public int countVowelPermutation(int n) {
-//
-//		if (n == 1) {
-//			return 5;
-//		} else {
-//			n--;
-//		}
-//
-//		int finalCount = 0;
-//		for (Map.Entry<String, String[]> entry : combinationBySymbol.entrySet()) {
-//			finalCount += recursion(n, entry.getKey());
-//			result = 0;
-//		}
-//
-//		return finalCount;
-//	}
-//
-//}
