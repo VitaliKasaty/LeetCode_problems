@@ -42,13 +42,14 @@ public class Count_Vowels_Permutation {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.countVowelPermutation(20));
+		System.out.println(solution.countVowelPermutation(30));
 	}
 }
 
 class Solution {
 
-	int[] result = new int[5];
+	int[] result = new int[2];
+	int mod = 1000000007;
 
 	public int[] recursion(int n, Character symbol) {
 
@@ -58,33 +59,38 @@ class Solution {
 
 		if (symbol.equals('a')) {
 			if (n == 1) {
-				result[0] += 1;
+				result[1] += 1;
+				result[1] %= mod;
 			} else {
 				recursion(n - 1, 'e');
 			}
 		} else if (symbol.equals('e')) {
 			if (n == 1) {
 				result[1] += 2;
+				result[1] %= mod;
 			} else {
 				recursion(n - 1, 'a');
 				recursion(n - 1, 'i');
 			}
 		} else if (symbol.equals('o')) {
 			if (n == 1) {
-				result[2] += 2;
+				result[1] += 2;
+				result[1] %= mod;
 			} else {
 				recursion(n - 1, 'i');
 				recursion(n - 1, 'u');
 			}
 		} else if (symbol.equals('u')) {
 			if (n == 1) {
-				result[3] += 1;
+				result[1] += 1;
+				result[1] %= mod;
 			} else {
 				recursion(n - 1, 'a');
 			}
 		} else if (symbol.equals('i')) {
 			if (n == 1) {
-				result[4] += 4;
+				result[1] += 4;
+				result[1] %= mod;
 			} else {
 				recursion(n - 1, 'e');
 				recursion(n - 1, 'o');
@@ -92,7 +98,7 @@ class Solution {
 				recursion(n - 1, 'a');
 			}
 		}
-
+		
 		return result;
 	}
 
@@ -102,18 +108,14 @@ class Solution {
 			return 5;
 		} else {
 			n--;
-		}
-
-		int finalCount;
+		}		
 		recursion(n, 'a');
 		recursion(n, 'e');
 		recursion(n, 'o');
 		recursion(n, 'u');
 		recursion(n, 'i');
 
-		finalCount = result[0] + result[1] + result[2] + result[3] + result[4];
-
-		return finalCount;
+		return result[1];
 	}
 
 }
