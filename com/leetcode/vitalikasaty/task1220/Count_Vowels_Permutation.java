@@ -42,80 +42,52 @@ public class Count_Vowels_Permutation {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.countVowelPermutation(30));
+		System.out.println(solution.countVowelPermutation(144));
 	}
 }
 
 class Solution {
 
-	int[] result = new int[2];
-	int mod = 1000000007;
-
-	public int[] recursion(int n, Character symbol) {
-
-		if (n == 0) {
-			return result;
-		}
-
-		if (symbol.equals('a')) {
-			if (n == 1) {
-				result[1] += 1;
-				result[1] %= mod;
-			} else {
-				recursion(n - 1, 'e');
-			}
-		} else if (symbol.equals('e')) {
-			if (n == 1) {
-				result[1] += 2;
-				result[1] %= mod;
-			} else {
-				recursion(n - 1, 'a');
-				recursion(n - 1, 'i');
-			}
-		} else if (symbol.equals('o')) {
-			if (n == 1) {
-				result[1] += 2;
-				result[1] %= mod;
-			} else {
-				recursion(n - 1, 'i');
-				recursion(n - 1, 'u');
-			}
-		} else if (symbol.equals('u')) {
-			if (n == 1) {
-				result[1] += 1;
-				result[1] %= mod;
-			} else {
-				recursion(n - 1, 'a');
-			}
-		} else if (symbol.equals('i')) {
-			if (n == 1) {
-				result[1] += 4;
-				result[1] %= mod;
-			} else {
-				recursion(n - 1, 'e');
-				recursion(n - 1, 'o');
-				recursion(n - 1, 'u');
-				recursion(n - 1, 'a');
-			}
+	public int countVowelPermutation(int n) {
+		
+		int mod = 1000000007;
+		
+		int[][] countByLastSymbol = new int[n][5];
+		
+		Arrays.fill(countByLastSymbol[0], 1);
+		
+		for (int i = 1; i < n; i++) {			
+//			[i][0] = a;
+//			[i][1] = e;
+//			[i][2] = i;
+//			[i][3] = o;
+//			[i][4] = u;	
+			
+			countByLastSymbol[i][0] += (countByLastSymbol[i - 1][1] 
+					+ countByLastSymbol[i - 1][2] + countByLastSymbol[i - 1][4]) % mod;
+			
+			countByLastSymbol[i][1] += (countByLastSymbol[i - 1][0] 
+					+ countByLastSymbol[i - 1][2]) % mod; 
+			
+			countByLastSymbol[i][2] += (countByLastSymbol[i - 1][1] 
+					+ countByLastSymbol[i - 1][3]) % mod;
+			
+			countByLastSymbol[i][3] += countByLastSymbol[i - 1][2] % mod;
+			
+			countByLastSymbol[i][4]	+= (countByLastSymbol[i - 1][2]
+					+ countByLastSymbol[i - 1][3]) % mod;
+			
+			
 		}
 		
-		return result;
-	}
-
-	public int countVowelPermutation(int n) {
-
-		if (n == 1) {
-			return 5;
-		} else {
-			n--;
-		}		
-		recursion(n, 'a');
-		recursion(n, 'e');
-		recursion(n, 'o');
-		recursion(n, 'u');
-		recursion(n, 'i');
-
-		return result[1];
+		int totalCount = 0;
+		
+		for(int i = 0; i < 5; i++) {
+			totalCount += countByLastSymbol[n-1][i];
+			totalCount %= mod;
+		}
+		
+		return totalCount;
 	}
 
 }
