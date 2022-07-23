@@ -1,4 +1,4 @@
-package com.leetcode.vitalikasaty.task1;
+package com.leetcode.vitalikasaty.easy.task1;
 
 import java.util.Arrays;
 

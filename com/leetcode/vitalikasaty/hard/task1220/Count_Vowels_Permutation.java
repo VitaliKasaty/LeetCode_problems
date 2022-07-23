@@ -1,12 +1,6 @@
-package com.leetcode.vitalikasaty.task1220;
+package com.leetcode.vitalikasaty.hard.task1220;
 
-import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
 
 /*
 Difficulty: Hard
