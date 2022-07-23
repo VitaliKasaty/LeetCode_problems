@@ -28,7 +28,7 @@ public class Palindrome_Number {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.isPalindrome(12321));
+		System.out.println(solution.isPalindrome(11));
 	}
 
 }
@@ -38,13 +38,21 @@ class Solution {
 
 		if (x < 0) {
 			return false;
-		} else if ((Integer.toString(x).length() % 2) == 0) {
-			return false;
 		} else {
+
 			String number = Integer.toString(x);
-			String firstHalf = number.substring(0, number.length() / 2);
-			String secondHald = number.substring(number.length() / 2 + 1, number.length());
+			int numberLength = number.length();
+			String firstHalf = number.substring(0, numberLength / 2);
+			String secondHald;
+
+			if (numberLength % 2 == 1) {
+				secondHald = number.substring(number.length() / 2 + 1, number.length());
+			} else {
+				secondHald = number.substring(number.length() / 2, number.length());
+			}
+
 			secondHald = new StringBuffer(secondHald).reverse().toString();
+
 			if (firstHalf.equals(secondHald)) {
 				return true;
 			} else {
