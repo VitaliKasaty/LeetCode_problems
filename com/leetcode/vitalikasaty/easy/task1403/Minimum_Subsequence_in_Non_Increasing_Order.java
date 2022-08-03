@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 /*
@@ -32,32 +33,40 @@ Output: [6]
 */
 
 public class Minimum_Subsequence_in_Non_Increasing_Order {
-	
-	public static void main(String[] args) {
-		
-    	List<Integer> result = new ArrayList<>();
-    	
-    	int[] nums = new int[] {1, 5, -10, 154, 14, 54};
 
-    	int max = Arrays.stream(nums).max().getAsInt();
-    	System.out.println(max);
-    	
-    	System.out.println(result);
-    	
-		
-//		Solution solution = new Solution();
-//		System.out.println(solution.minSubsequence(null));
+	public static void main(String[] args) {
+
+		int[] nums = new int[] {4, 4, 7, 6, 7};
+		Solution solution = new Solution();
+		System.out.println(solution.minSubsequence(nums));
 
 	}
 
 }
 
 class Solution {
-    public List<Integer> minSubsequence(int[] nums) {
-        
-    	List<Integer> result = new ArrayList<>();
-    	
+	public List<Integer> minSubsequence(int[] nums) {
 
-    	return result;
-    }
+		List<Integer> result = new ArrayList<>();
+		int sumResult = 0;
+
+		Arrays.sort(nums);
+
+		for (int i = nums.length - 1; i >= 0; i--) {
+			
+			int sumNums = IntStream.of(nums).sum();
+
+			if (sumResult <= sumNums) {
+				sumResult += nums[i];
+				result.add(nums[i]);
+				nums[i] = 0;
+			} else {
+				break;
+			}
+
+		}
+		System.out.println(Arrays.toString(nums));
+
+		return result;
+	}
 }
