@@ -2,13 +2,8 @@ package com.leetcode.vitalikasaty.easy.task1403;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /*
 Given the array nums, obtain a subsequence of the array whose sum of elements is strictly greater than the sum of the non included elements in such subsequence. 
@@ -35,27 +30,20 @@ Output: [6]
 public class Minimum_Subsequence_in_Non_Increasing_Order {
 
 	public static void main(String[] args) {
-
-		int[] nums = new int[] {4, 4, 7, 6, 7};
+		int[] nums = new int[] { 4, 4, 7, 6, 7 };
 		Solution solution = new Solution();
 		System.out.println(solution.minSubsequence(nums));
-
 	}
-
 }
 
 class Solution {
 	public List<Integer> minSubsequence(int[] nums) {
-
 		List<Integer> result = new ArrayList<>();
 		int sumResult = 0;
-
 		Arrays.sort(nums);
-
+		
 		for (int i = nums.length - 1; i >= 0; i--) {
-			
 			int sumNums = IntStream.of(nums).sum();
-
 			if (sumResult <= sumNums) {
 				sumResult += nums[i];
 				result.add(nums[i]);
@@ -63,9 +51,7 @@ class Solution {
 			} else {
 				break;
 			}
-
 		}
-		System.out.println(Arrays.toString(nums));
 
 		return result;
 	}
