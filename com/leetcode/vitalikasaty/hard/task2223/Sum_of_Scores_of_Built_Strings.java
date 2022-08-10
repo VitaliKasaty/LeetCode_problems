@@ -34,38 +34,49 @@ s consists of lowercase English letters.
 */
 
 public class Sum_of_Scores_of_Built_Strings {
-	
+
 	public static void main(String[] args) {
-		
+
 		Solution solution = new Solution();
-		System.out.println(solution.sumScores("babab"));
-
+		System.out.println(solution.sumScores("babab"));		
+		
 	}
-
 }
 
 class Solution {
-    public long sumScores(String s) {
-    	
-    	long result = 0;
-    	String si = "";
-    	
-    	for(int i = s.length() - 1; i >= 0; i--) {
-    		//long scoreOfSI = 0;
-    		si = s.charAt(i) + si;
-    		System.out.println(si);
-    		for (int j = 0; j < si.length(); j++) {
-    			if (si.charAt(j) == s.charAt(j)) {
-    				result++;    				
-    			} else {
-    				break;
-    			}
-    		}
-    		
-    		
-    	}
-    	
-    	return result;
-        
-    }
+	public long sumScores(String s) {
+
+		long result = 0;
+		char[] sArray = s.toCharArray();
+		//int[] zArray = new int[s.length()];
+
+		for (int i = 0; i < sArray.length; i++) {
+			
+			int left = 0;
+			int right = sArray.length - i - 1;
+			
+			while(right < sArray.length) {
+				if (sArray[left] == sArray[right]) {
+					result++;
+					left++;
+					right++;
+				} else {
+					break;
+				}
+			}
+			
+//			char[] si = Arrays.copyOfRange(sString, s.length() - 1 - i, s.length());
+//			
+//			for (int j = 0; j < si.length; j++) {
+//				if (si[j] == sString[j]) {
+//					result++;
+//				} else {
+//					break;
+//				}
+//			}
+
+		}
+		//System.out.println(Arrays.toString(zArray));
+		return result;
+	}
 }
