@@ -1,7 +1,5 @@
 package com.leetcode.vitalikasaty.hard.task2223;
 
-import java.util.Arrays;
-
 /*
 You are building a string s of length n one character at a time, prepending each new character to the front of the string.
 The strings are labeled from 1 to n, where the string with length i is labeled si.
@@ -38,10 +36,8 @@ s consists of lowercase English letters.
 public class Sum_of_Scores_of_Built_Strings {
 
 	public static void main(String[] args) {
-
 		Solution solution = new Solution();
-		System.out.println(solution.sumScores("azbazbzaz"));		
-		
+		System.out.println(solution.sumScores("azbazbzaz"));
 	}
 }
 
@@ -63,7 +59,7 @@ class Solution {
 			}
 			result += z[i];
 		}
-		result = Arrays.stream(z).sum() + s.length();
+		result = s.length();		
 		return result;
 	}
 }
