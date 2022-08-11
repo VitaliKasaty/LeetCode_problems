@@ -1,5 +1,7 @@
 package com.leetcode.vitalikasaty.hard.task2223;
 
+import java.util.Arrays;
+
 /*
 You are building a string s of length n one character at a time, prepending each new character to the front of the string.
 The strings are labeled from 1 to n, where the string with length i is labeled si.
@@ -38,7 +40,7 @@ public class Sum_of_Scores_of_Built_Strings {
 	public static void main(String[] args) {
 
 		Solution solution = new Solution();
-		System.out.println(solution.sumScores("babab"));		
+		System.out.println(solution.sumScores("azbazbzaz"));		
 		
 	}
 }
@@ -46,37 +48,22 @@ public class Sum_of_Scores_of_Built_Strings {
 class Solution {
 	public long sumScores(String s) {
 
-		long result = 0;
-		char[] sArray = s.toCharArray();
-		//int[] zArray = new int[s.length()];
-
-		for (int i = 0; i < sArray.length; i++) {
-			
-			int left = 0;
-			int right = sArray.length - i - 1;
-			
-			while(right < sArray.length) {
-				if (sArray[left] == sArray[right]) {
-					result++;
-					left++;
-					right++;
-				} else {
-					break;
-				}
+		long result = 0;		
+		int[] z = new int[s.length()];
+		int x = 0;
+		int y = 0;
+		char[] si = s.toCharArray();
+		
+		for(int i = 1; i < s.length(); i++){
+			z[i] = Math.max(0, Math.min(z[i - x], y - i + 1));
+			while(i + z[i] < s.length() && si[z[i]] == si[i + z[i]]){
+				x = i;
+				y = i + z[i];
+				z[i]++;
 			}
-			
-//			char[] si = Arrays.copyOfRange(sString, s.length() - 1 - i, s.length());
-//			
-//			for (int j = 0; j < si.length; j++) {
-//				if (si[j] == sString[j]) {
-//					result++;
-//				} else {
-//					break;
-//				}
-//			}
-
+			result += z[i];
 		}
-		//System.out.println(Arrays.toString(zArray));
+		result = Arrays.stream(z).sum() + s.length();
 		return result;
 	}
 }
