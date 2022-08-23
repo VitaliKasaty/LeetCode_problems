@@ -30,14 +30,32 @@ public class Count_Number_of_Ways_to_Place_Houses {
 	
 	public static void main(String[] args) {		
 		Solution solution = new Solution();
-		System.out.println(solution.countHousePlacements(2));
+		System.out.println(solution.countHousePlacements(3));
 	}
 
 }
 
 class Solution {
-    public int countHousePlacements(int n) {
-        
-    	return 1;
+    public int countHousePlacements(int n) {    	
+    	
+    	int k = n / 2;
+    	System.out.println("k = " + k);
+    	int up = getFactorial(n * 2);
+    	System.out.println("up = " + up);
+    	int down = getFactorial(n * 2 - k) * getFactorial(k);
+    	System.out.println("down = " + down);
+    	int result = up / down ;
+        result = result * result + 1;
+    	return result;
+    }
+    
+    public int getFactorial(int f) {
+    	
+    	if (f <= 1) {
+    		return 1;
+    	} else {
+    		return f * getFactorial(f - 1);
+    	}
     }
 }
+
