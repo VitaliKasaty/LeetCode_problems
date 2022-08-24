@@ -27,35 +27,36 @@ Constraints:
 */
 
 public class Count_Number_of_Ways_to_Place_Houses {
-	
-	public static void main(String[] args) {		
+
+	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.countHousePlacements(3));
+		System.out.println(solution.countHousePlacements(1000));
 	}
 
 }
 
 class Solution {
-    public int countHousePlacements(int n) {    	
-    	
-    	int k = n / 2;
-    	System.out.println("k = " + k);
-    	int up = getFactorial(n * 2);
-    	System.out.println("up = " + up);
-    	int down = getFactorial(n * 2 - k) * getFactorial(k);
-    	System.out.println("down = " + down);
-    	int result = up / down ;
-        result = result * result + 1;
-    	return result;
-    }
-    
-    public int getFactorial(int f) {
-    	
-    	if (f <= 1) {
-    		return 1;
-    	} else {
-    		return f * getFactorial(f - 1);
-    	}
-    }
-}
+	public int countHousePlacements(int n) {
 
+		int mod = 1000000007;
+		long result;
+		long countPerN[];
+
+		if (n < 3) {
+			countPerN = new long[3];
+		} else {
+			countPerN = new long[n + 1];
+		}
+
+		countPerN[1] = 2;
+		countPerN[2] = 3;
+
+		for (int i = 3; i <= n; i++) {
+			countPerN[i] = (countPerN[i - 1] + countPerN[i - 2]) % mod;
+		}
+		result = (countPerN[n] * countPerN[n]) % mod;
+
+		return (int) result;
+	}
+
+}
