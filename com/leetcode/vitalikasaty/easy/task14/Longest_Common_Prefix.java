@@ -2,7 +2,6 @@ package com.leetcode.vitalikasaty.easy.task14;
 
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.stream.Stream;
 
 /*
  * Write a function to find the longest common prefix string amongst an array of strings.
