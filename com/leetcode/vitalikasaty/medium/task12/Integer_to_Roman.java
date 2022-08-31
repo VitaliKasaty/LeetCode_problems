@@ -43,15 +43,84 @@ Constraints:
 */
 
 public class Integer_to_Roman {
-	
 	public static void main(String[] args) {
-
+		Solution solution = new Solution();
+		System.out.println(solution.intToRoman(1994));
 	}
-
 }
 
 class Solution {
-    public String intToRoman(int num) {
-        
-    }
+	public String intToRoman(int num) {
+
+		int units;
+		int tens;
+		int hundreds;
+		int thousands;
+		String result = "";
+
+		thousands = num / 1000;
+		num %= 1000;
+		hundreds = num / 100;
+		num %= 100;
+		tens = num / 10;
+		num %= 10;
+		units = num;
+
+		for (int i = 0; i < thousands; i++) {
+			result += "M";
+		}
+
+		if (hundreds > 0) {
+			if (hundreds <= 3) {
+				for (int i = 0; i < hundreds; i++) {
+					result += "C";
+				}
+			} else if (hundreds == 4) {
+				result += "CD";
+			} else if (hundreds >= 5 && hundreds < 9) {
+				result += "D";
+				for (int i = 0; i < hundreds - 5; i++) {
+					result += "C";
+				}
+			} else if (hundreds == 9) {
+				result += "CM";
+			}
+		}
+
+		if (tens > 0) {
+			if (tens <= 3) {
+				for (int i = 0; i < tens; i++) {
+					result += "X";
+				}
+			} else if (tens == 4) {
+				result += "XL";
+			} else if (tens >= 5 && tens < 9) {
+				result += "L";
+				for (int i = 0; i < tens - 5; i++) {
+					result += "X";
+				}
+			} else if (tens == 9) {
+				result += "XC";
+			}
+		}
+
+		if (units > 0) {
+			if (units <= 3) {
+				for (int i = 0; i < units; i++) {
+					result += "I";
+				}
+			} else if (units == 4) {
+				result += "IV";
+			} else if (units >= 5 && units < 9) {
+				result += "V";
+				for (int i = 0; i < units - 5; i++) {
+					result += "I";
+				}
+			} else if (units == 9) {
+				result += "IX";
+			}
+		}
+
+		return result;
+	}
 }
