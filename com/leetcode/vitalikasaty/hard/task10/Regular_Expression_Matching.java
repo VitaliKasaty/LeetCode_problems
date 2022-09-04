@@ -1,5 +1,7 @@
 package com.leetcode.vitalikasaty.hard.task10;
 
+import java.util.regex.Pattern;
+
 /*
 Given an input string s and a pattern p, implement regular expression matching with support for '.' and '*' where:
 '.' Matches any single character.​​​​
@@ -33,14 +35,12 @@ It is guaranteed for each appearance of the character '*', there will be a previ
 public class Regular_Expression_Matching {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.isMatch("aa", "a*"));
+		System.out.println(solution.isMatch("ab", ".*"));
 	}
-
 }
 
 class Solution {
 	public boolean isMatch(String s, String p) {
-
-		return false;
+		return Pattern.matches(p, s);
 	}
 }
