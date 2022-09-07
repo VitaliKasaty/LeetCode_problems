@@ -1,5 +1,7 @@
 package com.leetcode.vitalikasaty.medium.task2;
 
+import java.math.BigInteger;
+
 /*
 You are given two non-empty linked lists representing two non-negative integers.
 The digits are stored in reverse order, and each of their nodes contains a single digit.
@@ -28,23 +30,21 @@ It is guaranteed that the list represents a number that does not have leading ze
 public class Add_Two_Numbers {
 
 	public static void main(String[] args) {
-		
 
+		ListNode l1 = new ListNode(2);
+		ListNode l11 = new ListNode(4);
+		ListNode l111 = new ListNode(3);
+		l1.next = l11;
+		l11.next = l111;
 
-		ListNode l1 = new ListNode(0);
-		//ListNode l11 = new ListNode(4);
-		//ListNode l111 = new ListNode(3);
-		//l1.next = l11;
-		//l11.next = l111;
-
-		ListNode l2 = new ListNode(1);
-		//ListNode l22 = new ListNode(6);
-		//ListNode l222 = new ListNode(4);
-		//l2.next = l22;
-		//l22.next = l222;
+		ListNode l2 = new ListNode(5);
+		ListNode l22 = new ListNode(6);
+		ListNode l222 = new ListNode(4);
+		l2.next = l22;
+		l22.next = l222;
 
 		Solution solution = new Solution();
-		System.out.println(solution.addTwoNumbers(l1, l2));
+		solution.addTwoNumbers(l1, l2).print();
 
 	}
 }
@@ -52,9 +52,7 @@ public class Add_Two_Numbers {
 class Solution {
 
 	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
-		
 
-		
 		ListNode current = l1;
 		ListNode next = l1.next;
 		String l1Value = "";
@@ -63,7 +61,6 @@ class Solution {
 			l1Value += Integer.toString(current.val);
 			current = current.next;
 		} while (current != null);
-
 		l1Value = new StringBuilder(l1Value).reverse().toString();
 
 		current = l2;
@@ -73,13 +70,12 @@ class Solution {
 
 			l2Value += Integer.toString(current.val);
 			current = current.next;
-		} while (current != null);
+		} while (current != null);		
 		l2Value = new StringBuilder(l2Value).reverse().toString();
 
+		BigInteger resultValue = new BigInteger(l1Value).add(new BigInteger(l2Value));
+		String l3Value = resultValue.toString();
 		
-		long resultValue = Long.parseLong(l1Value) + Long.parseLong(l2Value);
-		
-		String l3Value = Long.toString(resultValue);
 		l3Value = new StringBuilder(l3Value).reverse().toString();
 		ListNode l3;
 		if (l3Value.length() == 1) {
@@ -87,20 +83,19 @@ class Solution {
 		} else {
 			l3 = new ListNode(Integer.parseInt(l3Value.substring(0, 1)), new ListNode());
 		}
-		
-		
-		
-		next = l3.next;		
-		for (int i = 1; i < l3Value.length(); i++) {			
+
+		next = l3.next;
+		for (int i = 1; i < l3Value.length(); i++) {
 			current = next;
 			current.val = Integer.parseInt(l3Value.substring(i, i + 1));
 			current.next = new ListNode();
 			next = current.next;
-			
+
 			if (i == l3Value.length() - 1) {
 				current.next = null;
 			}
-		}		
+		}
+		
 		return l3;
 	}
 }
