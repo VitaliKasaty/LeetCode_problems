@@ -1,8 +1,5 @@
 package com.leetcode.vitalikasaty.medium.task5;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /*
 Given a string s, return the longest palindromic substring in s.		 
 
@@ -24,26 +21,30 @@ public class Longest_Palindromic_Substring {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.longestPalindrome("civilwartestingwhetherthatnaptionoranynartionsoconceivedandsodedicatedcanlongendureWeareqmetonagreatbattlefiemldoftzhatwarWehavecometodedicpateaportionofthatfieldasafinalrestingplaceforthosewhoheregavetheirlivesthatthatnationmightliveItisaltogetherfangandproperthatweshoulddothisButinalargersensewecannotdedicatewecannotconsecratewecannothallowthisgroundThebravelmenlivinganddeadwhostruggledherehaveconsecrateditfaraboveourpoorponwertoaddordetractTgheworldadswfilllittlenotlenorlongrememberwhatwesayherebutitcanneverforgetwhattheydidhereItisforusthelivingrathertobededicatedheretotheulnfinishedworkwhichtheywhofoughtherehavethusfarsonoblyadvancedItisratherforustobeherededicatedtothegreattdafskremainingbeforeusthatfromthesehonoreddeadwetakeincreaseddevotiontothatcauseforwhichtheygavethelastpfullmeasureofdevotionthatweherehighlyresolvethatthesedeadshallnothavediedinvainthatthisnationunsderGodshallhaveanewbirthoffreedomandthatgovernmentofthepeoplebythepeopleforthepeopleshallnotperishfromtheearth"));
+		System.out.println(solution.longestPalindrome("abacab"));
 	}
 }
 
 class Solution {
 	public String longestPalindrome(String s) {
-
-		List<String> palindromics = new ArrayList<>();
+		String result = "";
 		String resultSubString;
+
 		for (int i = 0; i < s.length(); i++) {
-			for (int j = i; j <= s.length(); j++) {
-				resultSubString = s.substring(i, j);				
-				if (isPalindrome(resultSubString)) {
-					palindromics.add(resultSubString);
+			for (int j = s.length(); j > i; j--) {
+				resultSubString = s.substring(i, j);
+				if (resultSubString.charAt(0) == resultSubString.charAt(resultSubString.length() - 1)) {
+					if (isPalindrome(resultSubString) && result.length() < resultSubString.length()) {
+						result = resultSubString;
+						if (result.length() > s.length() - result.length()) {
+							return result;
+						}
+					}
 				}
 			}
 		}
-		palindromics.sort((o1, o2) -> o2.length() - o1.length());
-		
-		return palindromics.get(0);
+
+		return result;
 	}
 
 	public boolean isPalindrome(String inputString) {
