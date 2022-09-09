@@ -5,6 +5,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Optional;
 
 /*
 Given an integer array nums, 
@@ -39,42 +42,35 @@ Constraints:
 public class Three_Sum {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
+
 		System.out.println(solution.threeSum(new int[] { -1, 0, 1, 2, -1, -4 }));
 	}
 }
-
-
-//class Solution {
-//	public List<List<Integer>> threeSum(int[] nums) {
-//
-//		List<List<Integer>> result = new ArrayList<List<Integer>>();
-//		HashMap<Integer, int[]> iMap = new HashMap<>();
-//
-//
-//		return result;
-//	}
-//}
 
 class Solution {
 	public List<List<Integer>> threeSum(int[] nums) {
 
 		List<List<Integer>> result = new ArrayList<List<Integer>>();
+		HashMap<Integer, Integer> iMap = new HashMap<>();
 		HashSet<String> foundTriplets = new HashSet<>();
+		for (int i = 0; i < nums.length; i++) {
+			iMap.put(nums[i], i);
+		}
 
-		for (int i = 0; i < nums.length - 2; i++) {
-			for (int j = i + 1; j < nums.length - 1; j++) {
-				for (int k = j + 1; k < nums.length; k++) {
-					if (nums[i] + nums[j] + nums[k] == 0) {
+		for (int i = 0; i < nums.length; i++) {
+			for (int j = i + 1; j < nums.length; j++) {
+				int sumIJ = (nums[i] * -1) + (nums[j] * -1);
+				if (iMap.containsKey(sumIJ) && iMap.get(sumIJ) != i && iMap.get(sumIJ) != j) {
 
-						int[] numTriplet = new int[] { nums[i], nums[j], nums[k] };
-						Arrays.sort(numTriplet);
+					int[] numTriplet = new int[] { nums[i], nums[j], sumIJ };
+					Arrays.sort(numTriplet);
 
-						if (foundTriplets.add(Integer.toString(numTriplet[0]) + Integer.toString(numTriplet[1])
-						+ Integer.toString(numTriplet[2]))) {
-							result.add(new ArrayList<Integer>(Arrays.asList(numTriplet[0], numTriplet[1], numTriplet[2])));
-						}
+					if (foundTriplets.add(Integer.toString(numTriplet[0]) + Integer.toString(numTriplet[1])
+							+ Integer.toString(numTriplet[2]))) {
 
+						result.add(new ArrayList<Integer>(Arrays.asList(numTriplet[0], numTriplet[1], numTriplet[2])));
 					}
+
 				}
 			}
 		}
