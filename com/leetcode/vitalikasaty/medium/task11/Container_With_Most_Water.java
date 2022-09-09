@@ -21,12 +21,29 @@ Output: 1
 public class Container_With_Most_Water {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.maxArea(new int[] {1, 8, 6, 2, 5, 4, 8, 3, 7}));
+		System.out.println(solution.maxArea(new int[] { 1, 8, 6, 8, 5, 4, 8, 3, 7 }));
 	}
 }
 
 class Solution {
-    public int maxArea(int[] height) {
-        return 1;
-    }
+	public int maxArea(int[] height) {
+		int result = 0;
+		int left = 0;
+		int right = height.length - 1;
+
+		do {
+			int capacity = Math.min(height[left], height[right]) * (right - left);
+			if (capacity > result) {
+				result = capacity;
+			}
+			if (height[left] <= height[right]) {
+				left++;
+			} else {
+				right--;
+			}
+
+		} while (left != right);
+
+		return result;
+	}
 }
