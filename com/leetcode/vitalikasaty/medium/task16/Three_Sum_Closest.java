@@ -1,5 +1,7 @@
 package com.leetcode.vitalikasaty.medium.task16;
 
+import java.util.Arrays;
+
 /*
 Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
 Return the sum of the three integers.
@@ -22,8 +24,6 @@ Constraints:
 
 public class Three_Sum_Closest {
 	public static void main(String[] args) {
-		
-
 
 		Solution solution = new Solution();
 		System.out.println(solution.threeSumClosest(new int[] { -1, 2, 1, -4 }, 1));
@@ -34,25 +34,32 @@ public class Three_Sum_Closest {
 class Solution {
 	public int threeSumClosest(int[] nums, int target) {
 
+		Arrays.sort(nums);
 		int sumThree = nums[0] + nums[1] + nums[2];
-		int currentDistance = Math.abs(target - sumThree);
+		Arrays.toString(nums);
 
 		for (int i = 0; i < nums.length - 2; i++) {
-			for (int j = i + 1; j < nums.length - 1; j++) {
-				for (int k = j + 1; k < nums.length; k++) {
+			int j = i + 1;
+			int k = nums.length - 1;
 
-					int tempSumThree = nums[i] + nums[j] + nums[k];
-					int tempDistance = Math.abs(target - tempSumThree);
+			while (j < k) {
+				int tempSumThree = nums[i] + nums[j] + nums[k];
 
-					if (tempDistance < currentDistance) {
-						sumThree = tempSumThree;
-						currentDistance = tempDistance;
-					}
+				if (tempSumThree == target) {
+					return tempSumThree;
+				}
 
+				if (Math.abs(target - tempSumThree) < Math.abs(target - sumThree)) {
+					sumThree = tempSumThree;
+				}
+				if (tempSumThree < target) {
+					j++;
+				} else {
+					k--;
 				}
 			}
-		}
 
+		}
 		return sumThree;
 
 	}
