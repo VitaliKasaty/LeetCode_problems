@@ -1,9 +1,5 @@
 package com.leetcode.vitalikasaty.hard.task1526;
 
-import java.util.Arrays;
-import java.util.OptionalInt;
-import java.util.stream.Stream;
-
 /*
 You are given an integer array target. You have an integer array initial of the same size as target with all elements initially zeros.
 In one operation you can choose any subarray from initial and increment each value by one.
@@ -38,61 +34,71 @@ public class Minimum_Number_of_Increments_on_Subarrays_to_Form_a_Target_Array {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.minNumberOperations(new int[] { 3,1,5,4,2 }));
+		System.out.println(solution.minNumberOperations(new int[] { 3, 1, 5, 4, 2 }));
 
 	}
 
 }
 
 class Solution {
-
-	int startSearchPos = 0;
-
-	public int minNumberOperations(int[] target) {
-
-		int myArr[] = new int[target.length];
-		int countOperations = 0;
-
-		while (!Arrays.equals(target, myArr)) {
-
-			int start = startSearchPos;
-			int end = findSubArrayEndPos(target, myArr);
-			System.out.println("Start = " + start + " end = " + end);
-			
-			int minFromSubArray = Arrays.stream(Arrays.copyOfRange(target, start, end)).min().getAsInt();
-			int count = minFromSubArray - myArr[start];
-			for (int i = start; i < end; i++) {
-				myArr[i] += count;
-			}
-
-			for (int i = start; i < myArr.length; i++) {
-				if (myArr[i] != target[i]) {
-					startSearchPos = i;
-					break;
-				}
-			}
-
-			countOperations+= count;
-			//System.out.println(Arrays.toString(Arrays.copyOfRange(target, start, end)));
-			//System.out.println(Arrays.toString(Arrays.copyOfRange(myArr, start, end)));
-			//System.out.println("Operation N = " + countOperations);
-
-		}
-
-		return countOperations;
-	}
-
-	public int findSubArrayEndPos(int[] target, int[] myArr) {
-		int result = myArr.length;
-
-		for (int i = startSearchPos; i < myArr.length; i++) {
-			if (myArr[i] == target[i]) {
-				result = i;
-				break;
-			}
-		}
-
-		return result;
-	}
-
+    public int minNumberOperations(int[] target) {
+    	
+    	int result = target[0];
+    	
+    	for (int i = 1; i < target.length; i++) {
+    		result += Math.max(0, target[i] - target[i - 1]);
+    	}
+    	
+    	return result;
+        
+    }
 }
+
+//class Solution {
+//
+//	int startSearchPos = 0;
+//
+//	public int minNumberOperations(int[] target) {
+//
+//		int myArr[] = new int[target.length];
+//		int countOperations = 0;
+//
+//		while (!Arrays.equals(target, myArr)) {
+//
+//			int start = startSearchPos;
+//			int end = findSubArrayEndPos(target, myArr);
+//
+//			int countToAdd = Arrays.stream(Arrays.copyOfRange(target, start, end)).min().getAsInt() - myArr[start];
+//			
+//			for (int i = start; i < end; i++) {
+//				myArr[i] += countToAdd;
+//			}
+//
+//			for (int i = start; i < myArr.length; i++) {
+//				if (myArr[i] != target[i]) {
+//					startSearchPos = i;
+//					break;
+//				}
+//			}
+//
+//			countOperations += countToAdd;
+//
+//		}
+//
+//		return countOperations;
+//	}
+//
+//	public int findSubArrayEndPos(int[] target, int[] myArr) {
+//		int result = myArr.length;
+//
+//		for (int i = startSearchPos; i < myArr.length; i++) {
+//			if (myArr[i] == target[i]) {
+//				result = i;
+//				break;
+//			}
+//		}
+//
+//		return result;
+//	}
+//
+//}
