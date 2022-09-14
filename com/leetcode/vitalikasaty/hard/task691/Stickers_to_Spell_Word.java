@@ -1,7 +1,9 @@
 package com.leetcode.vitalikasaty.hard.task691;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /*
@@ -38,37 +40,52 @@ stickers[i] and target consist of lowercase English letters.
 public class Stickers_to_Spell_Word {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution
-				.minStickers(new String[] { "these","guess","about","garden","him"}, "atomher"));
+		System.out
+				.println(solution.minStickers(new String[] { "these", "guess", "about", "garden", "him" }, "atomher"));
 	}
 }
 
 class Solution {
 
+	public int result = 0;
+
 	public int minStickers(String[] stickers, String target) {
 
-		int result = 0;
+		System.out.println(bestStickerForTarget(stickers, target));
+		System.out.println(matchingStickerAndTarget("garden", "atomher"));
+		
+		String tempTarget = new String(target);
 		while (target != "") {
-			String bestSticker = bestStickerForTarget(stickers, target);
+			List<String> bestSticker = bestStickerForTarget(stickers, target);
 			System.out.println("Взят = " + bestSticker);
 			if (bestSticker == null) {
 				return -1;
 			} else {
 				result++;
-				for (int i = 0; i < bestSticker.length(); i++) {
-					char symbolSearch = bestSticker.charAt(i);
-					if (target.indexOf(symbolSearch) != -1) {
-						target = new StringBuffer(target).deleteCharAt(target.indexOf(symbolSearch)).toString();
-					}
-				}
+				target = matchingStickerAndTarget(bestSticker.get(0), target);
 			}
 		}
+		
 		return result;
 	}
+	
 
-	public String bestStickerForTarget(String stickers[], String target) {
+	public String matchingStickerAndTarget(String bestSticker, String target) {
+
+		for (int i = 0; i < bestSticker.length(); i++) {
+			char symbolSearch = bestSticker.charAt(i);
+			if (target.indexOf(symbolSearch) != -1) {
+				target = new StringBuffer(target).deleteCharAt(target.indexOf(symbolSearch)).toString();
+			}
+		}
+
+		return target;
+	}
+
+	public List<String> bestStickerForTarget(String stickers[], String target) {
 
 		int[] valueStickers = new int[stickers.length];
+		List<String> bestStickers = new ArrayList<>();
 
 		for (int i = 0; i < stickers.length; i++) {
 			String tempTarget = new String(target);
@@ -85,23 +102,20 @@ class Solution {
 			}
 		}
 
-		int bestValueI = -1;
-		int maxСonsilience = 0;
-		System.out.println("Target = " + target);
-		for (int i = 0; i < valueStickers.length; i++) {
-			System.out.println("Ценность " + stickers[i] + " = " + valueStickers[i]);
-			if (valueStickers[i] > maxСonsilience && valueStickers[i] > 0) {
-				maxСonsilience = valueStickers[i];
-				bestValueI = i;
-			}
-		}
-		System.out.println("-----------");
+		int maxСonsilience = Arrays.stream(valueStickers).max().getAsInt();
 
-		if (bestValueI == -1) {
+		if (maxСonsilience == 0) {
 			return null;
 		} else {
-			return stickers[bestValueI];
+			for (int i = 0; i < valueStickers.length; i++) {
+				if (valueStickers[i] == maxСonsilience) {
+					bestStickers.add(stickers[i]);
+				}
+			}
+
 		}
+		return bestStickers;
+
 	}
 
 }
