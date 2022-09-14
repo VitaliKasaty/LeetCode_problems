@@ -38,85 +38,70 @@ stickers[i] and target consist of lowercase English letters.
 public class Stickers_to_Spell_Word {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.minStickers(new String[] { "with", "example", "science" }, "thehat"));
+		System.out.println(solution
+				.minStickers(new String[] { "these","guess","about","garden","him"}, "atomher"));
 	}
 }
 
 class Solution {
 
-	public Map<Character, Integer> storageStickersSymbols = new HashMap<>();
-	public Map<Character, Integer> storageTargetSymbols = new HashMap<>();
+	public int minStickers(String[] stickers, String target) {
 
-	public int minStickers(String[] stickers, String target) {		
-
-		addStickersSymbolsToStorage(stickers);
-
-		for (int i = 0; i < target.length(); i++) {
-			if (!storageStickersSymbols.containsKey(target.charAt(i))) {
+		int result = 0;
+		while (target != "") {
+			String bestSticker = bestStickerForTarget(stickers, target);
+			System.out.println("Взят = " + bestSticker);
+			if (bestSticker == null) {
 				return -1;
+			} else {
+				result++;
+				for (int i = 0; i < bestSticker.length(); i++) {
+					char symbolSearch = bestSticker.charAt(i);
+					if (target.indexOf(symbolSearch) != -1) {
+						target = new StringBuffer(target).deleteCharAt(target.indexOf(symbolSearch)).toString();
+					}
+				}
 			}
 		}
-		
-		bestStickerForTarget(stickers, target);
-		
-		
-
-
-//		for (Map.Entry<Character, Integer> entry : storageStickersSymbols.entrySet()) {
-//			System.out.println("Key=" + entry.getKey() + " : " + entry.getValue());
-//		}
-//		System.out.println("fdf");
-//		for (Map.Entry<Character, Integer> entry : storageTargetSymbols.entrySet()) {
-//			System.out.println("Key=" + entry.getKey() + " : " + entry.getValue());
-//		}
-
-		return 1;
+		return result;
 	}
 
 	public String bestStickerForTarget(String stickers[], String target) {
 
-		String result = null;
-		int[] valueSticker = new int[stickers.length];
+		int[] valueStickers = new int[stickers.length];
 
 		for (int i = 0; i < stickers.length; i++) {
 			String tempTarget = new String(target);
-			for (int j = 0; j < target.length(); j++) {
-				if (stickers[i].contains("" + target.charAt(j))) {
-					valueSticker[i] ++;
-					tempTarget = tempTarget.substring(i);
-					System.out.println(tempTarget);
-				}
-			}
-			System.out.println("-----");
-		}
-		
-		for (int i = 0; i < valueSticker.length; i++) {
-			System.out.println("Слово N" + i + " = " + valueSticker[i] + " совпадений");
-		}
+			String tempSticker = new String(stickers[i]);
 
-		return result;
-	}
+			for (int j = 0; j < tempSticker.length(); j++) {
 
-	public void addTargetSymbolsToStorage(String target) {
-		for (int i = 0; i < target.length(); i++) {
-			if (storageTargetSymbols.containsKey(target.charAt(i))) {
-				storageTargetSymbols.put(target.charAt(i), storageTargetSymbols.get(target.charAt(i)) + 1);
-			} else {
-				storageTargetSymbols.put(target.charAt(i), 1);
-			}
-		}
-	}
+				char symbolSearch = tempSticker.charAt(j);
 
-	public void addStickersSymbolsToStorage(String[] stickers) {
-
-		for (String sticker : stickers) {
-			for (int i = 0; i < sticker.length(); i++) {
-				if (storageStickersSymbols.containsKey(sticker.charAt(i))) {
-					storageStickersSymbols.put(sticker.charAt(i), storageStickersSymbols.get(sticker.charAt(i)) + 1);
-				} else {
-					storageStickersSymbols.put(sticker.charAt(i), 1);
+				if (tempTarget.indexOf(symbolSearch) != -1) {
+					valueStickers[i]++;
+					tempTarget = new StringBuffer(tempTarget).deleteCharAt(tempTarget.indexOf(symbolSearch)).toString();
 				}
 			}
 		}
+
+		int bestValueI = -1;
+		int maxСonsilience = 0;
+		System.out.println("Target = " + target);
+		for (int i = 0; i < valueStickers.length; i++) {
+			System.out.println("Ценность " + stickers[i] + " = " + valueStickers[i]);
+			if (valueStickers[i] > maxСonsilience && valueStickers[i] > 0) {
+				maxСonsilience = valueStickers[i];
+				bestValueI = i;
+			}
+		}
+		System.out.println("-----------");
+
+		if (bestValueI == -1) {
+			return null;
+		} else {
+			return stickers[bestValueI];
+		}
 	}
+
 }
