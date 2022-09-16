@@ -2,9 +2,11 @@ package com.leetcode.vitalikasaty.hard.task691;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /*
 We are given n different types of stickers. Each sticker has a lowercase English word on it.
@@ -50,72 +52,66 @@ class Solution {
 	public int result = 0;
 
 	public int minStickers(String[] stickers, String target) {
-
-		System.out.println(bestStickerForTarget(stickers, target));
-		System.out.println(matchingStickerAndTarget("garden", "atomher"));
-		
-		String tempTarget = new String(target);
-		while (target != "") {
-			List<String> bestSticker = bestStickerForTarget(stickers, target);
-			System.out.println("Взят = " + bestSticker);
-			if (bestSticker == null) {
-				return -1;
-			} else {
-				result++;
-				target = matchingStickerAndTarget(bestSticker.get(0), target);
-			}
-		}
-		
+		target = sortSymbols(target);
+		System.out.println(target);
+		System.out.println(Arrays.toString(bestStickersBasket(stickers, target)));
 		return result;
 	}
-	
 
-	public String matchingStickerAndTarget(String bestSticker, String target) {
+	public String[] bestStickersBasket(String[] stickers, String target) {
 
-		for (int i = 0; i < bestSticker.length(); i++) {
-			char symbolSearch = bestSticker.charAt(i);
-			if (target.indexOf(symbolSearch) != -1) {
-				target = new StringBuffer(target).deleteCharAt(target.indexOf(symbolSearch)).toString();
-			}
-		}
-
-		return target;
-	}
-
-	public List<String> bestStickerForTarget(String stickers[], String target) {
-
-		int[] valueStickers = new int[stickers.length];
-		List<String> bestStickers = new ArrayList<>();
+		List<String> listStickers = new ArrayList<>();
+		String[] result = null;
 
 		for (int i = 0; i < stickers.length; i++) {
-			String tempTarget = new String(target);
-			String tempSticker = new String(stickers[i]);
+			String cleanSticker = "";
+			for (int j = 0; j < stickers[i].length(); j++) {
+				if (target.indexOf(stickers[i].charAt(j)) != -1) {
+					cleanSticker += stickers[i].charAt(j);
+				}
+			}
+			if (!cleanSticker.equals("")) {
+				cleanSticker = sortSymbols(cleanSticker);
+				cleanSticker = deleteUselessDuplicateSymbolsFromBasket(cleanSticker, target);
+				listStickers.add(cleanSticker);
+			}
+		}
+		Collections.sort(listStickers, (s1, s2) -> s2.length() - s1.length());
+		int maxLength = listStickers.get(0).length();
+		int countMaxSticker = (int) listStickers.stream().filter(s -> s.length() == maxLength).count();
+		result = new String[countMaxSticker];
+		for (int i = 0; i < countMaxSticker; i++) {
+			result[i] = listStickers.get(i);
+		}
+		return result;
+	}
 
-			for (int j = 0; j < tempSticker.length(); j++) {
+	public String deleteUselessDuplicateSymbolsFromBasket(String sticker, String target) {
 
-				char symbolSearch = tempSticker.charAt(j);
+		for (int i = 0; i < sticker.length(); i++) {
+			char symbol = sticker.charAt(i);
+			int countSymbolInSticker = (int) sticker.chars().filter(ch -> ch == symbol).count();
 
-				if (tempTarget.indexOf(symbolSearch) != -1) {
-					valueStickers[i]++;
-					tempTarget = new StringBuffer(tempTarget).deleteCharAt(tempTarget.indexOf(symbolSearch)).toString();
+			int countSymbolInTarget = (int) target.chars().filter(ch -> ch == symbol).count();
+
+			if (countSymbolInSticker > countSymbolInTarget) {
+				int countUselessSymbols = countSymbolInSticker - countSymbolInTarget;
+
+				for (int j = 0; j < countUselessSymbols; j++) {
+					sticker += " ";
+					sticker = new StringBuffer(sticker).delete(sticker.indexOf(symbol), sticker.indexOf(symbol) + 1)
+							.toString().strip();
 				}
 			}
 		}
 
-		int maxСonsilience = Arrays.stream(valueStickers).max().getAsInt();
+		return sticker;
+	}
 
-		if (maxСonsilience == 0) {
-			return null;
-		} else {
-			for (int i = 0; i < valueStickers.length; i++) {
-				if (valueStickers[i] == maxСonsilience) {
-					bestStickers.add(stickers[i]);
-				}
-			}
+	public String sortSymbols(String s) {
 
-		}
-		return bestStickers;
-
+		return s.chars().sorted().collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
+				.toString();
 	}
 
 }
