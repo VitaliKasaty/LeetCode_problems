@@ -1,12 +1,9 @@
 package com.leetcode.vitalikasaty.hard.task691;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Stream;
+import java.util.stream.Collectors;
 
 /*
 We are given n different types of stickers. Each sticker has a lowercase English word on it.
@@ -42,8 +39,32 @@ stickers[i] and target consist of lowercase English letters.
 public class Stickers_to_Spell_Word {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out
-				.println(solution.minStickers(new String[] { "these", "guess", "about", "garden", "him" }, "atomher"));
+
+		System.out.println(
+				solution.minStickers(new String[] { "these", "guess", "about", "garden", "him", "pppp" }, "atomher"));
+		System.out.println(solution.minStickers(new String[] { "control", "heart", "interest", "stream", "sentence",
+				"soil", "wonder", "them", "month", "slip", "table", "miss", "boat", "speak", "figure", "no", "perhaps",
+				"twenty", "throw", "rich", "capital", "save", "method", "store", "meant", "life", "oil", "string",
+				"song", "food", "am", "who", "fat", "if", "put", "path", "come", "grow", "box", "great", "word",
+				"object", "stead", "common", "fresh", "the", "operate", "where", "road", "mean" }, "stoodcrease"));
+
+		System.out.println(solution.minStickers(
+				new String[] { "heavy", "often", "just", "map", "door", "soil", "surface", "high", "middle", "noise",
+						"during", "my", "yes", "sugar", "ship", "special", "late", "spell", "receive", "silent",
+						"would", "person", "since", "children", "cell", "favor", "choose", "listen", "then", "finish",
+						"north", "safe", "molecule", "wrong", "mouth", "dead", "ask", "such", "trouble", "protect",
+						"last", "whether", "dream", "act", "turn", "double", "push", "happy", "where", "steam" },
+				"strangefell"));
+
+		System.out.println(solution.minStickers(
+				new String[] { "represent", "seven", "least", "fair", "is", "need", "sudden", "are", "want", "type",
+						"dear", "morning", "check", "subject", "again", "eye", "prepare", "sit", "since", "long",
+						"food", "only", "before", "white", "valley", "clothe", "tool", "difficult", "real", "leg",
+						"read", "thousand", "object", "nation", "break", "inch", "ice", "imagine", "dad", "grow",
+						"kept", "born", "island", "drop", "final", "will", "person", "sand", "block", "quotient" },
+				"enterbehind"));
+
+		System.out.println(solution.minStickers(new String[] { "with", "example", "science" }, "thehat"));
 	}
 }
 
@@ -52,9 +73,66 @@ class Solution {
 	public int result = 0;
 
 	public int minStickers(String[] stickers, String target) {
-		target = sortSymbols(target);
-		System.out.println(target);
-		System.out.println(Arrays.toString(bestStickersBasket(stickers, target)));
+
+		int result = 0;
+		List<String> targets = new ArrayList<String>();
+		targets.add(target);
+
+		if (canCalculateStickers(stickers, target)) {
+			for (int i = 1; i < Integer.MAX_VALUE; i++) {
+				targets = targetsAfterDeleteOneSticker(stickers, targets);
+
+				boolean isEnd;
+				isEnd = (int) targets.stream().filter(s -> s.equals("")).count() > 0 ? true : false;
+				if (isEnd) {
+					result = i;
+					break;
+				}
+
+			}
+		} else {
+			return -1;
+		}
+
+		return result;
+	}
+
+	public boolean canCalculateStickers(String[] stickers, String target) {
+		boolean result = true;
+
+		String heapStickers = "";
+
+		for (int i = 0; i < stickers.length; i++) {
+			heapStickers += stickers[i];
+		}
+
+		for (int i = 0; i < target.length(); i++) {
+			if (!heapStickers.contains("" + target.charAt(i))) {
+				return false;
+			}
+		}
+
+		return result;
+	}
+
+	public List<String> targetsAfterDeleteOneSticker(String[] stickers, List<String> targets) {
+		List<String> result = new ArrayList<>();
+
+		for (int i = 0; i < targets.size(); i++) {
+			String[] bestStickersForTarget = bestStickersBasket(stickers, targets.get(i));
+
+			for (int j = 0; j < bestStickersForTarget.length; j++) {
+				String currentSticker = bestStickersForTarget[j];
+				String tempTarget = targets.get(i);
+
+				for (int k = 0; k < currentSticker.length(); k++) {
+					tempTarget = tempTarget.replaceFirst("" + currentSticker.charAt(k), "");
+				}
+				result.add(tempTarget);
+			}
+
+		}
+
 		return result;
 	}
 
@@ -76,13 +154,28 @@ class Solution {
 				listStickers.add(cleanSticker);
 			}
 		}
+		listStickers = listStickers.stream().distinct().collect(Collectors.toList());
 		Collections.sort(listStickers, (s1, s2) -> s2.length() - s1.length());
+
 		int maxLength = listStickers.get(0).length();
+
 		int countMaxSticker = (int) listStickers.stream().filter(s -> s.length() == maxLength).count();
+
+		if (countMaxSticker == 1 && listStickers.size() > 1) {
+			int nextMaxLength = listStickers.get(1).length();
+			countMaxSticker = (int) listStickers.stream().filter(s -> s.length() == nextMaxLength).count();
+		}
+
+		if (countMaxSticker == 2 && listStickers.size() > 2) {
+			int nextMaxLength = listStickers.get(2).length();
+			countMaxSticker = (int) listStickers.stream().filter(s -> s.length() == nextMaxLength).count();
+		}
+
 		result = new String[countMaxSticker];
 		for (int i = 0; i < countMaxSticker; i++) {
 			result[i] = listStickers.get(i);
 		}
+
 		return result;
 	}
 
