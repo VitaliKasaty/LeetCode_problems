@@ -1,6 +1,7 @@
 package com.leetcode.vitalikasaty.medium.task2279;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -48,90 +49,28 @@ public class Maximum_Bags_With_Full_Capacity_of_Rocks {
 
 class Solution {
 	public int maximumBags(int[] capacity, int[] rocks, int additionalRocks) {
-
 		int result = 0;
-		int[][] capAndRocks = fillBags(capacity, rocks, additionalRocks);
+		List<Integer> notFilledCapacity = new ArrayList<>();
 
-		for (int j = 0; j < capacity.length; j++) {
-			if (capAndRocks[0][j] == capAndRocks[1][j]) {
+		for (int i = 0; i < capacity.length; i++) {
+			int difference = capacity[i] - rocks[i];
+
+			if (difference == 0) {
 				result++;
+			} else {
+				notFilledCapacity.add(difference);
 			}
 		}
 
-		return result;
+		Collections.sort(notFilledCapacity);
 
-	}
-
-	public int[][] fillBags(int[] capacity, int[] rocks, int additionalRocks) {
-
-		int[][] capAndRocks = createCapAndRockArray(capacity, rocks);
-
-		while (!posWithMinDifference(capAndRocks).isEmpty() && additionalRocks != 0) {
-			List<Integer> posForRocks = posWithMinDifference(capAndRocks);
-
-			for (int pos : posForRocks) {
-
-				if (additionalRocks != 0) {
-					int emptyCapacity = capAndRocks[0][pos] - capAndRocks[1][pos];
-
-					if (emptyCapacity <= additionalRocks) {
-						capAndRocks[1][pos] += emptyCapacity;
-						additionalRocks -= emptyCapacity;
-					} else {
-						capAndRocks[1][pos] += additionalRocks;
-						additionalRocks = 0;
-					}
-
-				} else {
-					break;
-				}
-			}
-		}
-		return capAndRocks;
-	}
-
-	public List<Integer> posWithMinDifference(int[][] capAndRocks) {
-		List<Integer> result = new ArrayList<>();
-
-		int minDifference = minDifferenceCapAndRock(capAndRocks);
-		if (minDifference != 0) {
-			for (int j = 0; j < capAndRocks[0].length; j++) {
-				int difference = capAndRocks[0][j] - capAndRocks[1][j];
-				if (difference == minDifference) {
-					result.add(j);
-				}
-			}
-		}
-		return result;
-	}
-
-	public int minDifferenceCapAndRock(int[][] capAndRocks) {
-		int minDifference = Integer.MAX_VALUE;
-
-		for (int j = 0; j < capAndRocks[0].length; j++) {
-			int difference = capAndRocks[0][j] - capAndRocks[1][j];
-			if (difference < minDifference && difference != 0) {
-				minDifference = difference;
-			}
-		}
-
-		if (minDifference == Integer.MAX_VALUE) {
-			return 0;
-		} else {
-			return minDifference;
-		}
-	}
-
-	public int[][] createCapAndRockArray(int[] capacity, int[] rocks) {
-		int[][] result = new int[2][capacity.length];
-
-		for (int i = 0; i < 2; i++) {
-			for (int j = 0; j < capacity.length; j++) {
-				if (i == 0) {
-					result[i][j] = capacity[j];
-				} else {
-					result[i][j] = rocks[j];
-				}
+		for (int i = 0; i < notFilledCapacity.size() && additionalRocks != 0; i++) {
+			int emptyPos = notFilledCapacity.get(i);
+			if (emptyPos <= additionalRocks) {
+				additionalRocks -= emptyPos;
+				result++;
+			} else {
+				additionalRocks = 0;
 			}
 		}
 
