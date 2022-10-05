@@ -1,11 +1,8 @@
 package com.leetcode.vitalikasaty.medium.task2100;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /*
 You and a gang of thieves are planning on robbing a bank. You are given a 0-indexed integer array security,
@@ -51,53 +48,61 @@ Constraints:
 public class Find_Good_Days_to_Rob_the_Bank {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.goodDaysToRobBank(new int[] { 5, 3, 3, 3, 5, 6, 2 }, 2));
+		System.out.println(solution.goodDaysToRobBank(new int[] { 0, 0, 0, 0, 2, 1 }, 2));
 	}
 }
 
 class Solution {
 	public List<Integer> goodDaysToRobBank(int[] security, int time) {
 		List<Integer> result = new ArrayList<>();
-		 Set<Integer> countDifferenceSecurity =	 Arrays.stream(security).boxed().collect(Collectors.toSet());
 
 		if (time == 0) {
 			for (int i = 0; i < security.length; i++) {
 				result.add(i);
 			}
-		}
-		else if (countDifferenceSecurity.size() == 1) {
-			return result;
-		} 
-		else {
+		} else {
+			boolean isPreviousDayGood = false;
+
 			for (int i = time; i < security.length - time; i++) {
-				System.out.println("Currentday = " + security[i] + "; i = " + i);
-				
-				int[] actualSecurityBefore = new int[time];
-				System.arraycopy(security, i - time, actualSecurityBefore, 0, time);
-				System.out.println("actualSecurityBefore" + Arrays.toString(actualSecurityBefore));
-				int[] goodSecurityBefore = Arrays.copyOf(actualSecurityBefore, actualSecurityBefore.length);
-				goodSecurityBefore = Arrays.stream(goodSecurityBefore).boxed().sorted(Comparator.reverseOrder())
-						.mapToInt(x -> x).toArray();
-				System.out.println("goodSecurityBefore" + Arrays.toString(goodSecurityBefore));
 
-				int[] actualSecurityAfter = new int[time];
-				System.arraycopy(security, i + 1, actualSecurityAfter, 0, time);
-				System.out.println("actualSecurityAfter" + Arrays.toString(actualSecurityAfter));
-				int[] goodSecurityAfter = Arrays.copyOf(actualSecurityAfter, actualSecurityAfter.length);
-				Arrays.sort(goodSecurityAfter);
-				System.out.println("goodSecurityAfter" + Arrays.toString(goodSecurityAfter));
-				System.out.println();
+				if (!isPreviousDayGood && (security[i - 1] >= security[i]) && (security[i] <= security[i + 1])) {
+					int[] securityBefore = new int[time + 1];
+					System.arraycopy(security, i - time, securityBefore, 0, time + 1);
+					int[] securityAfter = new int[time + 1];
+					System.arraycopy(security, i, securityAfter, 0, time + 1);
 
-				if (Arrays.equals(actualSecurityBefore, goodSecurityBefore)
-						&& Arrays.equals(actualSecurityAfter, goodSecurityAfter)
-						&& actualSecurityBefore[actualSecurityBefore.length - 1] >= security[i]
-						&& actualSecurityAfter[0] >= security[i]) {
-					System.out.println("Good day = " + i);
-					result.add(i);
+					if (isSortedDecreasing(securityBefore) && isSortedIncreasing(securityAfter)) {
+						result.add(i);
+						isPreviousDayGood = true;
+					}
+				} else {
+					if ((security[i - 1] >= security[i]) && (security[i] <= security[i + 1])
+							&& security[i + time - 1] <= security[i + time]) {
+						result.add(i);
+					} else {
+						isPreviousDayGood = false;
+					}
 				}
 			}
 		}
-
 		return result;
+	}
+
+	public boolean isSortedIncreasing(int[] a) {
+
+		if (a == null || a.length <= 1) {
+			return true;
+		}
+
+		return IntStream.range(0, a.length - 1).noneMatch(i -> a[i] > a[i + 1]);
+	}
+
+	public boolean isSortedDecreasing(int[] a) {
+
+		if (a == null || a.length <= 1) {
+			return true;
+		}
+
+		return IntStream.range(0, a.length - 1).noneMatch(i -> a[i] < a[i + 1]);
 	}
 }
