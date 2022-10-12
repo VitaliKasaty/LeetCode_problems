@@ -1,8 +1,6 @@
 package com.leetcode.vitalikasaty.hard.task2430;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,7 +48,11 @@ public class Maximum_Deletions_on_a_String {
 
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.deleteString("qqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfcazmmclmylkhwddlwlyigvsqhelwqjwilpvweldtskbwqaodhttxvwcpcouehysyzqrbswovaxehm"));
+//		System.out.println(solution.deleteString("aaabaab"));
+		System.out.println(solution.deleteString(
+				"ssssslgyssssslgyssssslgyssssslgymxssssslgyssssslgyssssslgyssssslgymxnzssssslgyssssslgyssssslgyssssslgymxssssslgyssssslgyssssslgyssssslgymxnztnosoairsrczdapfqupaayeeczdlgxkmcquhbbhczjkrsnvqfewwyhdmdlvthtpahrbdvdbmuvnmiplfwfngoocfvsldlbqmyflnofwlkfaodbspieifvbibrbwbrztqlntsrab"));
+//		System.out.println(solution.deleteString(
+//				"qqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfqqqqqqqqfcazmmclmylkhwddlwlyigvsqhelwqjwilpvweldtskbwqaodhttxvwcpcouehysyzqrbswovaxehm"));
 	}
 }
 
@@ -59,9 +61,12 @@ class Solution {
 	public int deleteString(String s) {
 
 		int result = 0;
-
+//		int operations = 1;
 		while (s.length() > 0) {
-			System.out.println("s input = " + s);
+//			System.out.println("s input = " + s);
+//			System.out.println("S length = " + s.length());
+//			System.out.println("Operations = " + operations);
+//			operations++;
 
 			HashMap<Integer, Integer> map = new HashMap<>();
 			List<Integer> pos = possibleDelete(s);
@@ -72,14 +77,29 @@ class Solution {
 			}
 
 			int max;
+			int bestKey = Integer.MAX_VALUE;
+			int bestValue = Integer.MIN_VALUE;
+
+			for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+//				System.out.println("entryKey = " + entry.getKey() + ", entryValue = " + entry.getValue());
+				if (entry.getValue() > bestValue) {
+					bestKey = entry.getKey();
+					bestValue = entry.getValue();
+				} else if (entry.getValue() == bestValue && bestKey > entry.getKey()) {
+					bestKey = entry.getKey();
+					bestValue = entry.getValue();
+				}
+			}
+
 			if (map.size() > 0) {
-				max = Collections.max(map.entrySet(), Comparator.comparingInt(Map.Entry::getValue)).getKey();
+				max = bestKey;
 			} else {
 				max = s.length();
 			}
 
 			s = deleteLetters(s, max);
-			System.out.println("s output = " + s);
+//			System.out.println("Deleted = " + s.substring(0, max) + " length = " + s.substring(0, max).length());
+//			System.out.println();
 			result++;
 		}
 
