@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
 
 /*
 A good meal is a meal that contains exactly two different food items with a sum of deliciousness equal to a power of two.
@@ -33,12 +34,11 @@ Constraints:
 public class Count_Good_Meals {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.numsPowerOf2());
-		// System.out.println(solution.countPairs(new int[] { 1, 1, 1, 3, 3, 3, 7 }));
-		// System.out.println(solution.countPairs(new int[] { 1, 3, 5, 7, 9 }));
+		System.out.println(solution.countPairs(new int[] { 1, 1, 1, 3, 3, 3, 7 }));
+		System.out.println(solution.countPairs(new int[] { 1, 3, 5, 7, 9 }));
 
-		// System.out.println(solution.countPairs(new int[] {
-		// 149,107,1,63,0,1,6867,1325,5611,2581,39,89,46,18,12,20,22,234}));
+		System.out.println(solution.countPairs(
+				new int[] { 149, 107, 1, 63, 0, 1, 6867, 1325, 5611, 2581, 39, 89, 46, 18, 12, 20, 22, 234 }));
 
 	}
 }
@@ -47,73 +47,19 @@ class Solution {
 
 	public int countPairs(int[] deliciousness) {
 
-		return 1;
-	}
-
-	public Map<Integer, Integer> valueCount() {
-
-	}
-
-	public List<Integer> numsPowerOf2() {
-		List<Integer> result = new ArrayList<>();
-		for (int i = 0; i <= 21; i++) {
-			int powerOf2 = (int) Math.pow(2, i);
-			result.add(powerOf2);
+		int result = 0;
+		List<Integer> passedValues = new ArrayList<>();
+		Arrays.sort(deliciousness);
+		for (int i = 0; i < deliciousness.length; i++) {
+			int meal = deliciousness[i];
+			for (int j = 0; j <= 21; j++) {
+				int shift = 1 << j;
+				int requiredPair = shift - meal;
+				int countPair = (int) Arrays.stream(deliciousness).skip(i + 1).filter(x -> x == requiredPair).count();
+				result += countPair;
+			}
 		}
+
 		return result;
 	}
-
 }
-
-//	public int countPairs(int[] deliciousness) {
-//		
-//		int result = 0;
-//		int[] distinct = Arrays.stream(deliciousness).distinct().toArray();
-//		int mod = 1000000000 + 7; 
-//		//Arrays.sort(deliciousness);
-//		Arrays.sort(distinct);
-//		System.out.println(Arrays.toString(distinct));
-//		 
-//		List<Integer> numsPowerOf2 = numsPowerOf2();
-//		for (int i = 0; i < distinct.length; i++) {
-//			for (int j = i; j < distinct.length; j++) {
-//				int goodMeal1 = distinct[i];
-//				int goodMeal2 = distinct[j];
-//				int sum = goodMeal1 + goodMeal2;
-//				
-//				if (sum > numsPowerOf2.get(numsPowerOf2.size() - 1)) {
-//					return result;
-//				}
-//				if (numsPowerOf2.contains(sum)) {
-//
-//					int countGoodMeal1 = (int) Arrays.stream(deliciousness).filter(x -> x == goodMeal1).count();
-//					int countGoodMeal2 = (int) Arrays.stream(deliciousness).filter(x -> x == goodMeal2).count();
-//					
-//					
-//					
-//					if (goodMeal1 == goodMeal2) {
-//						result += ((countGoodMeal1 - 1) * countGoodMeal1) / 2;
-//					} else {
-//						result += countGoodMeal1 * countGoodMeal2;
-//					}
-//					result %= mod;		
-//					
-//					
-//				}
-//			}
-//		}
-//
-//		return result;
-//	}
-
-//	public boolean isNumberPowerOf2(int a, int b) {
-//
-//		int sum = a + b;
-//		double log = Math.log(sum) / Math.log(2);
-//
-//		if (log % 1 == 0) {
-//			return true;
-//		} else {
-//			return false;
-//		}
-//	}
