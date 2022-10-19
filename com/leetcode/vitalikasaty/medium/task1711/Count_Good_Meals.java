@@ -36,10 +36,8 @@ public class Count_Good_Meals {
 		Solution solution = new Solution();
 		System.out.println(solution.countPairs(new int[] { 1, 1, 1, 3, 3, 3, 7 }));
 		System.out.println(solution.countPairs(new int[] { 1, 3, 5, 7, 9 }));
-
 		System.out.println(solution.countPairs(
 				new int[] { 149, 107, 1, 63, 0, 1, 6867, 1325, 5611, 2581, 39, 89, 46, 18, 12, 20, 22, 234 }));
-
 	}
 }
 
@@ -48,15 +46,24 @@ class Solution {
 	public int countPairs(int[] deliciousness) {
 
 		int result = 0;
-		List<Integer> passedValues = new ArrayList<>();
-		Arrays.sort(deliciousness);
+		int mod = 1000000007;
+		Map<Integer, Integer> passedValues = new HashMap<>();
+
 		for (int i = 0; i < deliciousness.length; i++) {
 			int meal = deliciousness[i];
 			for (int j = 0; j <= 21; j++) {
 				int shift = 1 << j;
 				int requiredPair = shift - meal;
-				int countPair = (int) Arrays.stream(deliciousness).skip(i + 1).filter(x -> x == requiredPair).count();
-				result += countPair;
+
+				if (passedValues.containsKey(requiredPair)) {
+					result += passedValues.get(requiredPair);
+					result %= mod;
+				}
+			}
+			if (!passedValues.containsKey(meal)) {
+				passedValues.put(meal, 1);
+			} else {
+				passedValues.put(meal, passedValues.get(meal) + 1);
 			}
 		}
 
