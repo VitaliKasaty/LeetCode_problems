@@ -26,7 +26,7 @@ Constraints:
 public class Numbers_With_Same_Consecutive_Differences {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(Arrays.toString(solution.numsSameConsecDiff(2, 0)));
+		System.out.println(Arrays.toString(solution.numsSameConsecDiff(3, 0)));
 	}
 }
 
@@ -34,39 +34,44 @@ class Solution {
 	public int[] numsSameConsecDiff(int n, int k) {
 
 		List<Integer> nums = new ArrayList<>();
-		List<String> possibleFirstTwoDigitCombination = new ArrayList<>();
 
 		for (int i = 0; i < 10 - k; i++) {
 			int goodDigits = i * 10 + i + k;
 
 			if (k == 0) {
 				if (i != 0) {
-					possibleFirstTwoDigitCombination.add(i + "" + i);
+					nums.add(i * 10 + i);
 				}
 			} else if (goodDigits >= 10) {
-				possibleFirstTwoDigitCombination.add(Integer.toString(goodDigits));
+				nums.add(goodDigits);
 				int reverse = (goodDigits % 10) * 10 + goodDigits / 10;
-				possibleFirstTwoDigitCombination.add(Integer.toString(reverse));
+				nums.add(reverse);
 			} else {
-				possibleFirstTwoDigitCombination.add(Integer.toString(goodDigits * 10));
+				nums.add(goodDigits * 10);
 			}
-
 		}
 
-		for (String value : possibleFirstTwoDigitCombination) {
-			char leftDigit = value.charAt(0);
-			char rightDigit = value.charAt(1);
+		int iter = 2;
+		while (iter != n) {
+			List<Integer> nextIterationNums = new ArrayList<>(nums);
 
-			String correctNum = "" + leftDigit + rightDigit;
+			for (int num : nextIterationNums) {
+				int rightDigit = num % 10;
 
-			for (int i = 0; i < n - 2; i++) {
-				if (i / 2 == 0) {
-					correctNum += "" + leftDigit;
+				if (k == 0) {
+					nums.add(num * 10 + rightDigit);
 				} else {
-					correctNum += "" + rightDigit;
+					if (rightDigit - k >= 0) {
+						nums.add(num * 10 + (rightDigit - k));
+					}
+					if (rightDigit + k < 10) {
+						nums.add(num * 10 + (rightDigit + k));
+					}
 				}
 			}
-			nums.add(Integer.valueOf(correctNum));
+			int power = iter;
+			nums.removeIf(x -> x < ((int) Math.pow(10, power)));
+			iter++;
 		}
 
 		return nums.stream().mapToInt(i -> i).toArray();
