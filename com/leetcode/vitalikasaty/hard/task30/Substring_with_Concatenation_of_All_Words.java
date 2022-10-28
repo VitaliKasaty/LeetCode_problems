@@ -1,7 +1,6 @@
 package com.leetcode.vitalikasaty.hard.task30;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,102 +42,50 @@ s and words[i] consist of lowercase English letters.*/
 public class Substring_with_Concatenation_of_All_Words {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		//System.out.println(solution.findSubstring("lingmindraboofooowingdingbarrwingmonkeypoundcake", new String[] { "fooo","barr","wing","ding","wing"}));
-	//	System.out.println(solution.findSubstring("barfoofoobarthefoobarman", new String[] { "bar","foo","the"}));
-		System.out.println(solution.findSubstring("ababababab", new String[] { "ababa","babab"}));
+		System.out.println(solution.findSubstring("lingmindraboofooowingdingbarrwingmonkeypoundcake",
+				new String[] { "fooo", "barr", "wing", "ding", "wing" }));
+		System.out.println(solution.findSubstring("barfoofoobarthefoobarman", new String[] { "bar", "foo", "the" }));
+		System.out.println(solution.findSubstring("ababababab", new String[] { "ababa", "babab" }));
 	}
 }
 
 class Solution {
-	public List<Integer> findSubstring(String s, String[] words) {
 
+	public List<Integer> findSubstring(String s, String[] words) {
 		Map<String, Integer> mapWords = new HashMap<>();
 		List<Integer> result = new ArrayList<>();
 
-		int wordsLength = String.join("", words).length();
+		int wordsCount = words.length;
+		int wordLength = words[0].length();
 
 		for (String word : words) {
 			mapWords.merge(word, 1, (old, add) -> old + 1);
 		}
-		System.out.println(mapWords);
-		for (int i = 0; i <= s.length(); i++) {
-			String subS;
-			//System.out.println(mapWords);
-			if (i + wordsLength <= s.length()) {
-				if (i == 0) {
-					subS = s.substring(0, wordsLength);
-				} else {
-					subS = s.substring(i, i + wordsLength);
-				}
-				System.out.println("Исследуемая строка = " + subS);
-				int shiftLength = shiftLength(subS, mapWords);
-				System.out.println("Сдвиг = " + shiftLength);
-				if (shiftLength == 0) {
-					result.add(i);
-					i += shiftLengthFirstEqualWord(subS, mapWords) - 1;
-				} else {
-					i += shiftLengthFirstEqualWord(subS, mapWords) - 1;
-				}
 
-			} else {
-				break;
-			}
-		}
-		return result;
+		for (int i = 0; i <= s.length() - wordLength * wordsCount; i++) {
 
-	}
-	
-	public int shiftLengthFirstEqualWord(String subS, Map<String, Integer> mapWords) {
-		
-		int result = Integer.MAX_VALUE;
-		String word = "";
-		for (int i = 0; i < subS.length(); i++) {
-			word += subS.charAt(i);
-			
-			if (mapWords.containsKey(word)) {
-				return word.length();
-			}
-		}
-		
-		for (Map.Entry<String, Integer> map : mapWords.entrySet()) {
-			if (subS.indexOf(map.getKey()) != -1) {
-				if (subS.indexOf(map.getKey()) < result && subS.indexOf(map.getKey()) != 0) {
-					result = subS.indexOf(map.getKey());
+			Map<String, Integer> mapSubSWords = new HashMap<>();
+			int iteration = 0;
+			while (iteration < wordsCount) {
+				String word = s.substring(i + iteration * wordLength, i + (iteration * wordLength) + wordLength);
+				if (mapWords.containsKey(word)) {
+					mapSubSWords.merge(word, 1, (old, add) -> old + 1);
+
+					if (mapSubSWords.get(word) > mapWords.get(word)) {
+						break;
+					}
+				} else {
+					break;
 				}
+				iteration++;
+			}
+
+			if (iteration == wordsCount) {
+				result.add(i);
 			}
 		}
-		
+
 		return result;
 	}
 
-	public int shiftLength(String subS, Map<String, Integer> mapWords) {
-		
-		int indexOfirstWord = -1;
-		
-		Map<String, Integer> mapWordsTemp = new HashMap<>(mapWords);
-		
-		StringBuffer subSTemp = new StringBuffer(subS);
-
-		for (Map.Entry<String, Integer> map : mapWordsTemp.entrySet()) {			
-			String word = map.getKey();
-			int value = map.getValue();
-			for (int i = 0; i < value; i++) {
-				
-				int indexOfWord = subSTemp.indexOf(map.getKey());
-
-				if (indexOfWord != -1) {
-					
-					if (indexOfirstWord == -1) {
-						indexOfirstWord = indexOfWord;
-					}					
-					subSTemp.delete(indexOfWord, indexOfWord + word.length());
-					System.out.println("Substemp после удаления = " + subSTemp);
-					mapWordsTemp.put(word, mapWordsTemp.get(word) - 1);				
-
-				}
-			}
-		}
-
-		return subSTemp.length();
-	}
 }
