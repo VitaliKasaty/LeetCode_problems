@@ -43,116 +43,102 @@ s and words[i] consist of lowercase English letters.*/
 public class Substring_with_Concatenation_of_All_Words {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.findSubstring("wordgoodgoodgoodbestword", new String[] { "word","good","best","good"}));
+		//System.out.println(solution.findSubstring("lingmindraboofooowingdingbarrwingmonkeypoundcake", new String[] { "fooo","barr","wing","ding","wing"}));
+	//	System.out.println(solution.findSubstring("barfoofoobarthefoobarman", new String[] { "bar","foo","the"}));
+		System.out.println(solution.findSubstring("ababababab", new String[] { "ababa","babab"}));
 	}
 }
 
 class Solution {
 	public List<Integer> findSubstring(String s, String[] words) {
 
+		Map<String, Integer> mapWords = new HashMap<>();
 		List<Integer> result = new ArrayList<>();
-		String wordsFull = String.join("", words);
-		int wordsLength = wordsFull.length();
-		
-		for (int i = 0; i < words.length; i++) {
-			words[i] = sortStringByWords(words[i]);
+
+		int wordsLength = String.join("", words).length();
+
+		for (String word : words) {
+			mapWords.merge(word, 1, (old, add) -> old + 1);
 		}
-
-		Map<Character, Integer> mapS1Letters = lettersByNum(wordsFull);
-		// System.out.println(mapS1Letters);
-		for (int i = 0; i < s.length(); i++) {
-			
-//			String subS;
-//			if (i + wordsLength == s.length()) {
-//				subS = s.substring(i);
-//			} else {
-//				subS = s.substring(i, i + wordsLength);
-//			}
-			
-			String subS = s.substring(i, i + wordsLength);
-			Map<Character, Integer> mapS2Letters = lettersByNum(subS);
-
-			//System.out.println("Map words = " + mapS1Letters);
-			//System.out.println("Map subs = " + mapS2Letters);
-
-			int countNoMatchesLetters = countNoMatchesLetters(mapS1Letters, mapS2Letters);			
-
-
-			if (countNoMatchesLetters == 0) {
-				result.add(i);
-
-				if (i + wordsLength < s.length()) {
-					i = i + findFirstMinEqualWord(subS, words) - 1;
+		System.out.println(mapWords);
+		for (int i = 0; i <= s.length(); i++) {
+			String subS;
+			//System.out.println(mapWords);
+			if (i + wordsLength <= s.length()) {
+				if (i == 0) {
+					subS = s.substring(0, wordsLength);
 				} else {
-					break;
+					subS = s.substring(i, i + wordsLength);
+				}
+				System.out.println("Исследуемая строка = " + subS);
+				int shiftLength = shiftLength(subS, mapWords);
+				System.out.println("Сдвиг = " + shiftLength);
+				if (shiftLength == 0) {
+					result.add(i);
+					i += shiftLengthFirstEqualWord(subS, mapWords) - 1;
+				} else {
+					i += shiftLengthFirstEqualWord(subS, mapWords) - 1;
 				}
 
 			} else {
-				if (i + countNoMatchesLetters + wordsLength < s.length()) {
-					i += countNoMatchesLetters - 1;
-				} else {
-					break;
-				}
-			}
-
-		}
-
-		return result;
-	}
-
-	public String sortStringByWords(String s) {
-
-		char[] words = s.toCharArray();
-		Arrays.sort(words);
-		s = new String(words);
-
-		return s;
-	}
-	
-	public int findFirstMinEqualWord (String s1, String words[]) { 
-		
-		String temp = "";
-		int result = 0;
-		for (int i = 0; i < s1.length(); i++) {
-			temp = sortStringByWords(temp + s1.charAt(i));
-			
-			if (Arrays.asList(words).contains(temp)) {
-				result = temp.length();
 				break;
 			}
 		}
+		return result;
+
+	}
+	
+	public int shiftLengthFirstEqualWord(String subS, Map<String, Integer> mapWords) {
 		
+		int result = Integer.MAX_VALUE;
+		String word = "";
+		for (int i = 0; i < subS.length(); i++) {
+			word += subS.charAt(i);
+			
+			if (mapWords.containsKey(word)) {
+				return word.length();
+			}
+		}
+		
+		for (Map.Entry<String, Integer> map : mapWords.entrySet()) {
+			if (subS.indexOf(map.getKey()) != -1) {
+				if (subS.indexOf(map.getKey()) < result && subS.indexOf(map.getKey()) != 0) {
+					result = subS.indexOf(map.getKey());
+				}
+			}
+		}
 		
 		return result;
 	}
 
-	public int countNoMatchesLetters(Map<Character, Integer> map1, Map<Character, Integer> mapS2) {
+	public int shiftLength(String subS, Map<String, Integer> mapWords) {
+		
+		int indexOfirstWord = -1;
+		
+		Map<String, Integer> mapWordsTemp = new HashMap<>(mapWords);
+		
+		StringBuffer subSTemp = new StringBuffer(subS);
 
-		int countNoMatches = 0;
+		for (Map.Entry<String, Integer> map : mapWordsTemp.entrySet()) {			
+			String word = map.getKey();
+			int value = map.getValue();
+			for (int i = 0; i < value; i++) {
+				
+				int indexOfWord = subSTemp.indexOf(map.getKey());
 
-		for (Map.Entry<Character, Integer> mapS1 : map1.entrySet()) {
-			Character keyS1 = mapS1.getKey();
-			Integer valueS1 = mapS1.getValue();
-			if (mapS2.containsKey(keyS1)) {
-			//	if (mapS2.get(keyS1) < valueS1) {
-				//	countNoMatches += valueS1 - mapS2.get(keyS1);
-				//}
+				if (indexOfWord != -1) {
+					
+					if (indexOfirstWord == -1) {
+						indexOfirstWord = indexOfWord;
+					}					
+					subSTemp.delete(indexOfWord, indexOfWord + word.length());
+					System.out.println("Substemp после удаления = " + subSTemp);
+					mapWordsTemp.put(word, mapWordsTemp.get(word) - 1);				
 
-			} else {
-				countNoMatches += valueS1;
+				}
 			}
 		}
 
-		return countNoMatches;
-	}
-	
-	public Map<Character, Integer> lettersByNum(String s) {
-		Map<Character, Integer> map = new HashMap<>();
-
-		for (int i = 0; i < s.length(); i++) {
-			map.merge(s.charAt(i), 1, (value, plus1) -> value + plus1);
-		}
-
-		return map;
+		return subSTemp.length();
 	}
 }
