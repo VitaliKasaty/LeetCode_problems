@@ -1,11 +1,7 @@
 package com.leetcode.vitalikasaty.medium.task1711;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.stream.Stream;
 
 /*
 A good meal is a meal that contains exactly two different food items with a sum of deliciousness equal to a power of two.
