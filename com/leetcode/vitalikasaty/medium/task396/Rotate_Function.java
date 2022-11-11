@@ -1,8 +1,6 @@
 package com.leetcode.vitalikasaty.medium.task396;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /*
 You are given an integer array nums of length n.
@@ -43,26 +41,22 @@ public class Rotate_Function {
 class Solution {
 	public int maxRotateFunction(int[] nums) {
 
-		int maxValue = Integer.MIN_VALUE;
-
+		int sumF0 = 0;
+		int sumElements = IntStream.of(nums).sum();
 		for (int i = 0; i < nums.length; i++) {
-			if (i > 0) {
-				List<Integer> numsList = Arrays.stream(nums).boxed().collect(Collectors.toList());
-				numsList.add(0, numsList.get(numsList.size() - 1));
-				numsList.remove(numsList.size() - 1);
-				nums = numsList.stream().mapToInt(x -> Integer.valueOf(x)).toArray();
-			}
+			sumF0 += i * nums[i];
+		}
+		int maxFI = sumF0;
 
-			int tempValue = 0;
-			for (int j = 0; j < nums.length; j++) {
-				tempValue += j * nums[j];
+		int prevFI = sumF0;
+		for (int i = nums.length - 1; i > 0; i--) {
+			int currentFI = prevFI + sumElements - nums[i] * nums.length;
+			if (currentFI > maxFI) {
+				maxFI = currentFI;
 			}
-			if (tempValue > maxValue) {
-				maxValue = tempValue;
-			}
-
+			prevFI = currentFI;
 		}
 
-		return maxValue;
+		return maxFI;
 	}
 }
