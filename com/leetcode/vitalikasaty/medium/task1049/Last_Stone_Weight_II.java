@@ -1,9 +1,7 @@
 package com.leetcode.vitalikasaty.medium.task1049;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.HashSet;
+import java.util.Set;
 
 /*
 You are given an array of integers stones where stones[i] is the weight of the ith stone.
@@ -20,7 +18,7 @@ Return the smallest possible weight of the left stone. If there are no stones le
 public class Last_Stone_Weight_II {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.lastStoneWeightII(new int[] { 2,7,4,1,8,1 }));
+		System.out.println(solution.lastStoneWeightII(new int[] { 31, 26, 33, 21, 40 }));
 	}
 
 }
@@ -28,32 +26,20 @@ public class Last_Stone_Weight_II {
 class Solution {
 	public int lastStoneWeightII(int[] stones) {
 
-		List<Integer> stoneList = Arrays.stream(stones).boxed().collect(Collectors.toList());
+		Set<Integer> hitValues = new HashSet<>();
+		hitValues.add(stones[0]);
+		hitValues.add(-stones[0]);
 
-		if (stones.length == 1) {
-			return stones[0];
-		} else {
-			while (stoneList.size() > 1) {
-				System.out.println("do sort");
-				System.out.println(stoneList);
-				Collections.sort(stoneList, Collections.reverseOrder());
-				System.out.println("aftersort");
-				System.out.println(stoneList);
-				int stone1 = stoneList.get(0);
-				int stone2 = stoneList.get(1);
-
-				if (stone1 >= stone2) {
-					stoneList.set(0, stone1 - stone2);
-					stoneList.set(1, 0);
-				} else {
-					stoneList.set(1, stone2 - stone1);
-					stoneList.set(0, 1);
-				}
-
-				stoneList.removeIf(stone -> stone <= 0);
+		for (int i = 1; i < stones.length; i++) {
+			Set<Integer> tempHitValues = new HashSet<>();
+			for (int value : hitValues) {
+				tempHitValues.add(value - stones[i]);
+				tempHitValues.add(value + stones[i]);
 			}
+			hitValues = tempHitValues;
 		}
 
-		return stoneList.size() > 0 ? stoneList.get(0) : 0;
+		return hitValues.stream().sorted().filter(value -> value >= 0).findFirst().orElse(0);
 	}
+
 }
