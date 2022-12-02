@@ -1,8 +1,6 @@
 package com.leetcode.vitalikasaty.easy.task2217;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 /*
 Given an integer array queries and a positive integer intLength, 
@@ -33,8 +31,7 @@ Constraints:
 public class Find_Palindrome_With_Fixed_Length {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution
-				.kthPalindrome(new int[] { 58,29,358732919,149198876,246393513,104605183,18363825 }, 1));
+		System.out.println(Arrays.toString(solution.kthPalindrome(new int[] { 1, 2, 3, 4, 5, 90 }, 3)));
 	}
 }
 
@@ -44,7 +41,7 @@ class Solution {
 		int leftPalindromeLength = (intLength + 1) / 2;
 		long[] answer = new long[queries.length];
 		long start = (int) Math.pow(10, leftPalindromeLength - 1);
-		long maxPossibleQueryI = (long) Math.pow(10, (intLength + 1) / 2 ) - 1 ;
+		long maxPossibleQueryI = (long) Math.pow(10, (intLength + 1) / 2) - 1;
 
 		for (int i = 0; i < queries.length; i++) {
 
@@ -63,12 +60,14 @@ class Solution {
 					rightPalindrome = new StringBuilder(String.valueOf(value)).reverse();
 				}
 				String fullPalindrome = leftPalinrome.append(rightPalindrome).toString();
+				if (fullPalindrome.length() == intLength) {
+					answer[i] = Long.valueOf(fullPalindrome);
+				} else {
+					answer[i] = -1;
+				}
 
-				answer[i] = Long.valueOf(fullPalindrome);
 			}
 		}
-		System.out.println(Arrays.toString(answer));
 		return answer;
-
 	}
 }
