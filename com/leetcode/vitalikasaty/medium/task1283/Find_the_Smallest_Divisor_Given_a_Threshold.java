@@ -1,7 +1,5 @@
 package com.leetcode.vitalikasaty.medium.task1283;
 
-import javax.swing.plaf.basic.BasicTreeUI.TreeCancelEditingAction;
-
 /*
 Given an array of integers nums and an integer threshold, we will choose a positive integer divisor, divide all the array by it, and sum the division's result.
 Find the smallest divisor such that the result mentioned above is less than or equal to threshold.
@@ -38,22 +36,20 @@ class Solution {
 	public int smallestDivisor(int[] nums, int threshold) {
 		int minDivisor = 1;
 		int maxDivisor = 1000000;
-		int midDivisor = (maxDivisor - minDivisor + 1) / 2;
-		int sumIteration = threshold + 1;
 
-		while (maxDivisor != minDivisor) {
-			sumIteration = dividedSum(nums, midDivisor);
+		while (minDivisor < maxDivisor) {
+			int midDivisor = minDivisor + (maxDivisor - minDivisor) / 2;
+			int sumIteration = dividedSum(nums, midDivisor);
 
 			if (sumIteration <= threshold) {
-				maxDivisor = midDivisor - 1;
-				midDivisor = (maxDivisor - minDivisor + 1) / 2 + minDivisor;
+				maxDivisor = midDivisor;
 			} else {
 				minDivisor = midDivisor + 1;
-				midDivisor = (maxDivisor - minDivisor + 1) / 2 + minDivisor;
+
 			}
 		}
 
-		return midDivisor;
+		return minDivisor;
 	}
 
 	public int dividedSum(int[] nums, int divisor) {
