@@ -1,9 +1,5 @@
 package com.leetcode.vitalikasaty.medium.task134;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 /*
 There are n gas stations along a circular route, where the amount of gas at the ith station is gas[i].
 You have a car with an unlimited gas tank and it costs cost[i] of gas to travel from the ith station to its next (i + 1)th station.
@@ -43,56 +39,33 @@ n == gas.length == cost.length
 public class Gas_Station {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.canCompleteCircuit(new int[] { 5, 8, 2, 8 }, new int[] { 6, 5, 6, 6 }));
+		System.out.println(solution.canCompleteCircuit(new int[] { 1, 2, 3, 4, 5 }, new int[] { 3, 4, 5, 1, 2 }));
+
 	}
 }
 
 class Solution {
 	public int canCompleteCircuit(int[] gas, int[] cost) {
 
-		int count = gas.length;
-		int gasMinusCost[] = new int[count];
-		List<Integer> canStartStation = new ArrayList<>();
-		int result = 0;
+		int canStart = 0;
+		int totalGasCost = 0;
+		int currentGasCost = 0;
 
-		for (int i = 0; i < count; i++) {
-			gasMinusCost[i] = gas[i] - cost[i];
+		for (int i = 0; i < gas.length; i++) {
+			totalGasCost += gas[i] - cost[i];
+			currentGasCost += gas[i] - cost[i];
+
+			if (currentGasCost < 0) {
+				currentGasCost = 0;
+				canStart = i + 1;
+			}
 		}
 
-		if (Arrays.stream(gasMinusCost).sum() < 0) {
+		if (totalGasCost < 0) {
 			return -1;
 		} else {
-			for (int i = 0; i < count; i++) {
-				if (gasMinusCost[i] >= 0) {
-					canStartStation.add(i);
-				}
-			}
-
-			for (int station : canStartStation) {
-				ArrayList<Integer> way = new ArrayList<>();
-				for (int i = station; i < count; i++) {
-					way.add(gasMinusCost[i]);
-				}
-
-				for (int i = 0; i < station; i++) {
-					way.add(gasMinusCost[i]);
-				}
-
-				int start = way.get(0);
-				for (int i = 1; i < way.size(); i++) {
-					start += way.get(i);
-					if (start < 0) {
-						break;
-					}
-				}
-
-				if (start >= 0) {
-					result = station;
-					break;
-				}
-			}
+			return canStart;
 		}
 
-		return result;
 	}
 }
