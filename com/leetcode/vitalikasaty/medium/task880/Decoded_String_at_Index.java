@@ -1,11 +1,5 @@
 package com.leetcode.vitalikasaty.medium.task880;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-
 /*
 You are given an encoded string s. To decode the string to a tape, the encoded string is read one character at a time and the following steps are taken:
 	If the character read is a letter, that letter is written onto the tape.
@@ -42,7 +36,7 @@ The decoded string is guaranteed to have less than 263 letters.
 public class Decoded_String_at_Index {
 	public static void main(String[] args) {
 		Solution solution = new Solution();
-		System.out.println(solution.decodeAtIndex("leet2code3", 10));
+		System.out.println(solution.decodeAtIndex("a2345678999999999999999", 1));
 	}
 }
 
@@ -50,36 +44,36 @@ class Solution {
 	public String decodeAtIndex(String s, int k) {
 
 		String result = "";
-		String currentString = "";
-		int sizeDecoded = 0;
-		boolean isPrevDigit = false;
-		List<TreeMap<Integer, String>> listMaps = new ArrayList<>();
-
+		long sizeDecoded = 0;
+		char ch;
+		boolean isDigit;
+		
 		for (int i = 0; i < s.length(); i++) {
-			char ch = s.charAt(i);
-			boolean isDigit = Character.isDigit(ch);
+			ch = s.charAt(i);
+			isDigit = Character.isDigit(ch);
 
 			if (!isDigit) {
-				result += ch;
-				isPrevDigit = false;
+				sizeDecoded++;
 			} else {
 				int digit = Character.digit(ch, 10);
+				sizeDecoded *= digit;
+			}
+		}
 
-				if (!isPrevDigit) {
-					int fullSizeCurrStr = currentString.length() * (digit - 1);
-					sizeDecoded += fullSizeCurrStr;
-					int tempSize = sizeDecoded;
-					listMaps.add(new TreeMap<Integer, String>() {
-						{
-							put(tempSize, currentString);
-						}
-					});
-				} else {
-					listMaps.remove(listMaps.size() - 1);
-					
+		for (int i = s.length() - 1; i >= 0; --i) {
+			ch = s.charAt(i);
+			isDigit = Character.isDigit(ch);
+
+			if (isDigit) {
+				int digit = Character.digit(ch, 10);
+				sizeDecoded /= digit;
+				k %= sizeDecoded;
+			} else {
+				if (k == 0 || k == sizeDecoded) {
+					result += ch;
+					return result;
 				}
-
-				isPrevDigit = true;
+				sizeDecoded--;
 			}
 		}
 
